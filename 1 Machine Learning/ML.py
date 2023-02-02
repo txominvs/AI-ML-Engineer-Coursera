@@ -6,6 +6,13 @@
 #       >> Ordinal, poisson, fast forest quantile, linear (analytic formulas! or Ordinary Least Squares or Gradient Descent),
 #       >> Polynomial, Lasso, Stepwise, ridge, bayesian linear, Neural Network,
 #       >> Decision forest, boosted decision tree, K-Nearest Neighbors
+#       >> Regression tree (see Decision Trees)
+#           Make branching each time
+#           The prediction of each branching is the AVERAGE VALUE of the datapoints
+#           Branchings are chosen so that the Mean Absolute Error SUM |real-predic| is minimized, so the branching option with the least MAE is picked, among all options for:
+#           Categorical Feature branching
+#           Numerical Feature branching: binary branching with FEATURE < BOUNDARY and FEATURE >= BOUNDARY. All boundaries are tested between the i -th and i+1 -th datapoints, and the boundary with the LEAST MAE is chosen
+#           Stoping conditions: 1) tree depth 2) remaining samples on a branch 3) number of samples if another branching is made
 #       ++ K-fold cross-validation (multiple train/test split and average accuracy)
 #       ++ Metrics: MAE, MSE, RMSE, Relative Absolute Error (prediction error/mean value predictor)
 #                   Relative Squared Error(prediction error squared/mean value deviation squared)
@@ -57,11 +64,7 @@
 sklearn.preprocessing.StandardScaler().fit(X).transform(X) # or StandardScaler().fit_transform(X)
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size = 0.3)
 sklearn.preprocessing.LabelEncoder.fit(['group 1', 'group 2', 'group 3']).transform(X)
-sklearn.preprocessing.normalize(X, norm="l1")
-
-model = sklearn.svm.SVC(gamma=0.001, C=100.) .fit(x, y) .predict(x_test)
-print(sklearn.metrics.confusion_matrix(y_test, yhat, labels=[1,0]))
-pickle.dumps(model)
+sklearn.preprocessing.normalize(X, axis=1, norm='l1', copy=False) #axis=1 means that each ROW will be normalized as a vector
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe["categorical_column_name"].value_counts();
 dataframe[0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
@@ -69,6 +72,12 @@ dataframe[["column1","columname2"]].hist(); plt.show(); dataframe[["column_name"
 plt.hist(dataframe[["column1"]].values, 6, histtype='bar', facecolor='g'); plt.show()
 plt.pie(dataframe[["column_name"]].value_counts().values, labels=dataframe[["column_name"]].unique(), autopct='%1.3f%%'); plt.show()
 dataframe.iloc[row_number_slice, column_number_slice]
+dataframe.isna().sum(); data.dropna(inplace=True) # Detect missing values: isna() replaces each value with True/False and sum() sums all ROWs into a single one. Dropna = remove rows with missing data
+dataframe.drop(columns=["column_names"]); dataframe.drop(['column_names'], axis=1)
+dataframe.abs().mean() # Useful for calculating MAE: abs() replaces values with abs and mean into a single ROW
+dataframe[(dataframe['column_name'] >= 30) & (dataframe['another_column'] < 200)]
+dataframe['time_column'] = pandas.to_datetime(dataframe['time_column']); dataframe['time_column'].dt.hour # also dt.weekday and some_date-anther_date_substract
+pd.get_dummies(dataframe, columns = ['categorical_column_name']) # creates many columns to capture the ONE-HOT ENCODING
 
 
 mask = np.random.rand(len(dataframe)) < 0.8; train, test = dataframe[mask], dataframe[~mask]
@@ -91,5 +100,14 @@ probabs = sklearn.svm.LinearSVC(class_weight='balanced', loss="hinge", fit_inter
 sklearn.metrics.roc_auc_score(y_test, probabs)
 sklearn.metrics.hinge_loss(y_test, probabs)
 
+model = sklearn.svm.SVC(gamma=0.001, C=100.) .fit(x, y) .predict(x_test)
+print(sklearn.metrics.confusion_matrix(y_test, yhat, labels=[1,0]))
+pickle.dumps(model)
+
+sklearn.tree.DecisionTreeRegressor(criterion = "mse", max_depth=8) .fit(x_train, y_train) .predict(x_test) # max_depth, min_samples_split, min_samples_leaf, max_features
+regression_tree.score(x_test, y_test); regression_tree.predict(x_test) # R^2 value
+
+
 snapml.DecisionTreeClassifier(max_depth=4, n_jobs=4).fit(x_train, y_train, sample_weight=w_train) # CPU n_jobs=4 vs GPU use_gpu=True
 snapml.SupportVectorMachine(class_weight='balanced', random_state=25, n_jobs=4, fit_intercept=False).fit(x_train, y_train) # CPU n_jobs=4 vs GPU use_gpu=True
+snapml.DecisionTreeRegressor(max_depth=8, random_state=45, n_jobs=4).fit(x_train, y_train).predict(x_test) # CPU n_jobs=4 vs GPU use_gpu=True
