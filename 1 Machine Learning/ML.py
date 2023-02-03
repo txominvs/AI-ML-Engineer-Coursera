@@ -25,13 +25,18 @@
 #           Entropy [0 data is very pure, +1 data is very random] = amount of admixture in a group
 #           Each branching increases INFORMATION GAIN as much as possible = entropy before splitting - 1/number of datapoints * SUM(split) size of chunk * entropy of each chunk
 #       >> Naïve Bayes, Linear Discriminant Analysis
-#       >> K-Nearest Neighbor
+#       >> K-Nearest Neighbor (KNN)
 #           Select the K datapoints closest to the one we want to predict
 #           Prediction = most popular class among its K neighbors
 #           How to choose K? Use the TEST set to make a plot with ACCURACY vs. K-VALUE an choose the highest
 #           For regression prediction = mean value of its K closest datapoints
-#       >> Logistic Regression, Neural Networks
-#       >> Support Vector Machines (SVM)
+#       >> Logistic Regression
+#           Continous features (or one-hot encoded) -> BINARY categorical classification and PROBABILITY
+#           Linear boundaries for classifing data
+#           Makes a linear regression THROUGH the binary categorical data and then applies a SIGMOID 1/(1+exp(-x))
+#           Cost function (loss function + regularization) = label - Probability(label)
+#           Uses GRADIENT DESCENT and STOPPING CONDITION=accuracy
+#       >> Neural Networks, Support Vector Machines (SVM)
 #       ++ Metrics: Jaccard index [0 worst, +1 best]
 #                                   = size of INTERSECTION prediction and label / size of UNION prediction and label
 #                                   = correct predictions / (size of prediction + size of labels - size of correct predictions)
