@@ -35,7 +35,8 @@
 #           Linear boundaries for classifing data
 #           Makes a linear regression THROUGH the binary categorical data and then applies a SIGMOID 1/(1+exp(-x))
 #           Cost function (loss function + regularization) = label - Probability(label)
-#           Uses GRADIENT DESCENT and STOPPING CONDITION=accuracy
+#           Uses GRADIENT DESCENT is used to minimize loss and STOPPING CONDITION=accuracy: new params = old params - step size * d[cost function]/d[params]
+#           Loss function for SIGMOID = LOG LOSS = -log[ Probability(correct label | input) ] and not the usual MEAN SQUARED ERROR SUM (y-pred)^2
 #       >> Neural Networks, Support Vector Machines (SVM)
 #       ++ Metrics: Jaccard index [0 worst, +1 best]
 #                                   = size of INTERSECTION prediction and label / size of UNION prediction and label
@@ -112,7 +113,13 @@ pickle.dumps(model)
 sklearn.tree.DecisionTreeRegressor(criterion = "mse", max_depth=8) .fit(x_train, y_train) .predict(x_test) # max_depth, min_samples_split, min_samples_leaf, max_features
 regression_tree.score(x_test, y_test); regression_tree.predict(x_test) # R^2 value
 
-
 snapml.DecisionTreeClassifier(max_depth=4, n_jobs=4).fit(x_train, y_train, sample_weight=w_train) # CPU n_jobs=4 vs GPU use_gpu=True
 snapml.SupportVectorMachine(class_weight='balanced', random_state=25, n_jobs=4, fit_intercept=False).fit(x_train, y_train) # CPU n_jobs=4 vs GPU use_gpu=True
 snapml.DecisionTreeRegressor(max_depth=8, random_state=45, n_jobs=4).fit(x_train, y_train).predict(x_test) # CPU n_jobs=4 vs GPU use_gpu=True
+
+sklearn.linear_model.LogisticRegression(C=0.01, solver='liblinear').fit(x_train,y_train) # C parameter = 1/regularization strength
+logistic_regression.predict(x_test); logistic_regression.predict_proba(x_test) # predict returns label (either 0 or 1) whereas predict_proba returns [probability for 0, probability for 1]
+sklearn.metrics.jaccard_score(y_test, predictions, pos_label=0) # jaccard index = size intersection/size union
+sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.metrics.classification_report(y_test, predictions)
+# precission=how reliable is it that the predicion is correct; recall=how many of actual labels the is it detecting; F1 score=harmonic average of precission and recall
+sklearn.metrics.log_loss(y_test, prediction_probabilities)
