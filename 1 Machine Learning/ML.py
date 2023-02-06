@@ -37,7 +37,16 @@
 #           Cost function (loss function + regularization) = label - Probability(label)
 #           Uses GRADIENT DESCENT is used to minimize loss and STOPPING CONDITION=accuracy: new params = old params - step size * d[cost function]/d[params]
 #           Loss function for SIGMOID = LOG LOSS = -log[ Probability(correct label | input) ] and not the usual MEAN SQUARED ERROR SUM (y-pred)^2
-#       >> Neural Networks, Support Vector Machines (SVM)
+#       >> Neural Networks
+#       >> Support Vector Machines (SVM)
+#           First, map data to a HIGHER DIMENSIONAL SPACE using KERNELLING: linear, polynomial, Radial Basis Functions, Sigmoid
+#           Then, separate data using a HYPERPLANE (once the kernel turns it into LINEARLY SEPARABLE DATA)
+#           The hyperplane is chosen so that the classes are MAXIMALLY SEPARATED
+#           SUPPORT VECTORS: datapoints closes to the separation hyperplane, only these are used in the learning process
+#               y = (w^T)*x + b where y >=1 represents one class and y<=-1 represents the other, equalities are for closest support vectors
+#           AVANTAGES: well in high dimensions, only use a subset of the data (support vectors)
+#           DISADVANTAGES: over fitter if features>samples, no class probabilities, computationally costly for big DB
+#           USES: Image analysis, text filtering, genetics because many features
 #       ++ Metrics: Jaccard index [0 worst, +1 best]
 #                                   = size of INTERSECTION prediction and label / size of UNION prediction and label
 #                                   = correct predictions / (size of prediction + size of labels - size of correct predictions)
