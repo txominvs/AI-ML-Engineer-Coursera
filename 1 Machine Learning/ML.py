@@ -81,8 +81,8 @@ x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y
 sklearn.preprocessing.LabelEncoder.fit(['group 1', 'group 2', 'group 3']).transform(X)
 sklearn.preprocessing.normalize(X, axis=1, norm='l1', copy=False) #axis=1 means that each ROW will be normalized as a vector
 
-dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe["categorical_column_name"].value_counts();
-dataframe[0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
+dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
+dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
 dataframe[["column1","columname2"]].hist(); plt.show(); dataframe[["column_name"]].unique();
 plt.hist(dataframe[["column1"]].values, 6, histtype='bar', facecolor='g'); plt.show()
 plt.pie(dataframe[["column_name"]].value_counts().values, labels=dataframe[["column_name"]].unique(), autopct='%1.3f%%'); plt.show()
@@ -92,6 +92,7 @@ dataframe.drop(columns=["column_names"]); dataframe.drop(['column_names'], axis=
 dataframe.abs().mean() # Useful for calculating MAE: abs() replaces values with abs and mean into a single ROW
 dataframe[(dataframe['column_name'] >= 30) & (dataframe['another_column'] < 200)]
 dataframe['time_column'] = pandas.to_datetime(dataframe['time_column']); dataframe['time_column'].dt.hour # also dt.weekday and some_date-anther_date_substract
+dataframe = dataframe[pd.to_numeric(dataframe['column_name'], errors='coerce').notnull()]; dataframe['column_name'] = dataframe['column_name'].astype('int') # drop non-numerical valued rows and convert the rest to ints
 pd.get_dummies(dataframe, columns = ['categorical_column_name']) # creates many columns to capture the ONE-HOT ENCODING
 
 
@@ -132,3 +133,8 @@ sklearn.metrics.jaccard_score(y_test, predictions, pos_label=0) # jaccard index 
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.metrics.classification_report(y_test, predictions)
 # precission=how reliable is it that the predicion is correct; recall=how many of actual labels the is it detecting; F1 score=harmonic average of precission and recall
 sklearn.metrics.log_loss(y_test, prediction_probabilities)
+
+sklearn.svm.SVC(kernel='rbf') .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
+sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
+sklearn.metrics.classification_report(y_test, predictions)
+sklearn.metrics.f1_score(y_test, predictions, average='weighted'); sklearn.metrics.jaccard_score(y_test, predictions, pos_label="which label mean POSITIVE DETECTION")
