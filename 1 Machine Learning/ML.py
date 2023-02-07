@@ -9,9 +9,10 @@
 #       >> Regression tree (see Decision Trees)
 #           Make branching each time
 #           The prediction of each branching is the AVERAGE VALUE of the datapoints
-#           Branchings are chosen so that the Mean Absolute Error SUM |real-predic| is minimized, so the branching option with the least MAE is picked, among all options for:
-#           Categorical Feature branching
-#           Numerical Feature branching: binary branching with FEATURE < BOUNDARY and FEATURE >= BOUNDARY. All boundaries are tested between the i -th and i+1 -th datapoints, and the boundary with the LEAST MAE is chosen
+#           Branchings are chosen so that the Mean Absolute Error SUM |real-predic| is minimized,
+#           so the branching option with the least MAE is picked, among all options for:
+#              Categorical Feature branching
+#              Numerical Feature branching: binary branching with FEATURE < BOUNDARY and FEATURE >= BOUNDARY. All boundaries are tested between the i -th and i+1 -th datapoints, and the boundary with the LEAST MAE is chosen
 #           Stoping conditions: 1) tree depth 2) remaining samples on a branch 3) number of samples if another branching is made
 #       ++ K-fold cross-validation (multiple train/test split and average accuracy)
 #       ++ Metrics: MAE, MSE, RMSE, Relative Absolute Error (prediction error/mean value predictor)
