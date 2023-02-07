@@ -29,7 +29,7 @@
 #           Select the K datapoints closest to the one we want to predict
 #           Prediction = most popular class among its K neighbors
 #           How to choose K? Use the TEST set to make a plot with ACCURACY vs. K-VALUE an choose the highest
-#           For regression prediction = mean value of its K closest datapoints
+#           For REGRESSION prediction = mean value of its K closest datapoints
 #       >> Logistic Regression
 #           Continous features (or one-hot encoded) -> BINARY categorical classification and PROBABILITY
 #           Linear boundaries for classifing data
@@ -47,6 +47,24 @@
 #           AVANTAGES: well in high dimensions, only use a subset of the data (support vectors)
 #           DISADVANTAGES: over fitter if features>samples, no class probabilities, computationally costly for big DB
 #           USES: Image analysis, text filtering, genetics because many features
+#       >> Softmax regression (multinomial logistic regression)
+#           MULTICLASS classification: more possible labels than a binary classification, but each sample is associated with a single class
+#           label_probabilities = [ exp(- A* X) , exp(- B* X) , exp(- C* X) ] / normalization
+#           predicted_label = np.argmax(label_probabilities)
+#           TRAINING according to logistic regression CROSS ENTROPY -> needs probabilties -> does *not* work with Support Vector Machines
+#           Space is divided into HYPERPLANES A*X, B*X, C*X and regions correspond to labels
+#       >> One vs All (One vs Rest): turn two-class binary classifier into MULTICLASS classifier
+#           Let's say we have N classes. For each of the classes:
+#               We train a binary classifier: CURRENT CLASS vs ALL THE OTHER CLASSES
+#           Finally, we choose the class by either MAJORITY VOTE (the class that got most votes) or CLASSIFIER WITH THE HIGHEST PROBABILITY
+#           AMBIGUITY CAN OCUR: resolve by selecting the CLASSIFIER that got the HIGHEST PROBABILITY (argmax) or use the FUSION RULE (add output of the linear classifier)
+#       >> One vs One
+#           For i = class label:
+#               For j = class label > i:
+#                   BinaryClassifier = does the sample belong to I or to J ?
+#           Finally, MAJORITY VOTE = the class that got selected more times wins
+#           In total, if we have N classes, we need to train aprox N^2 classifiers because SUM(i<=N) N-i = i(i-1)/2!. Or pick i=any of the N classes, j=any of the remaining N-1 classes, each pair will be repeated 2! times
+#           SMALLER AMBIGUITY REGION: resolve by PROBABILITY or FUSION RULE (see one vs all classifiers)
 #       ++ Metrics: Jaccard index [0 worst, +1 best]
 #                                   = size of INTERSECTION prediction and label / size of UNION prediction and label
 #                                   = correct predictions / (size of prediction + size of labels - size of correct predictions)
