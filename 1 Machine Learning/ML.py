@@ -136,8 +136,6 @@ probabs = sklearn.svm.LinearSVC(class_weight='balanced', loss="hinge", fit_inter
 sklearn.metrics.roc_auc_score(y_test, probabs)
 sklearn.metrics.hinge_loss(y_test, probabs)
 
-model = sklearn.svm.SVC(gamma=0.001, C=100.) .fit(x, y) .predict(x_test)
-print(sklearn.metrics.confusion_matrix(y_test, yhat, labels=[1,0]))
 pickle.dumps(model)
 
 sklearn.tree.DecisionTreeRegressor(criterion = "mse", max_depth=8) .fit(x_train, y_train) .predict(x_test) # max_depth, min_samples_split, min_samples_leaf, max_features
@@ -155,7 +153,7 @@ sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.met
 # precission=how reliable is it that the predicion is correct; recall=how many of actual labels the is it detecting; F1 score=harmonic average of precission and recall
 sklearn.metrics.log_loss(y_test, prediction_probabilities)
 
-sklearn.svm.SVC(kernel='rbf') .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
+sklearn.svm.SVC(kernel='rbf', gamma=0.001, C=100.) .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
 sklearn.svm.SVC(probability=True) .fit(x_train, y_train) .predict_proba(x_test)
 sklearn.svm.SVC(decision_function_shape='ovo') .fit(x_train, y_train) .decision_function(x_test) # For multiple classes: ovo=one.vs.one ovr=one.vs.rest BUT internally always uses ONE vs ONE strategy
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
