@@ -99,6 +99,7 @@ sklearn.preprocessing.StandardScaler().fit(X).transform(X) # or StandardScaler()
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size = 0.3)
 sklearn.preprocessing.LabelEncoder.fit(['group 1', 'group 2', 'group 3']).transform(X)
 sklearn.preprocessing.normalize(X, axis=1, norm='l1', copy=False) #axis=1 means that each ROW will be normalized as a vector
+sklearn.datasets.load_iris().data .target; # data format [each sample [features], [next sample's features] ...]
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
 dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
@@ -157,3 +158,7 @@ sklearn.svm.SVC(kernel='rbf') .fit(x_train, y_train) .predict(x_test) # Linear, 
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
 sklearn.metrics.classification_report(y_test, predictions)
 sklearn.metrics.f1_score(y_test, predictions, average='weighted'); sklearn.metrics.jaccard_score(y_test, predictions, pos_label="which label mean POSITIVE DETECTION")
+
+LogisticRegression().fit(x_train, y_train).predict_proba(x_test); np.argmax(probability,axis=1)
+predict(x_test)
+accuracy_score(y,predictions)
