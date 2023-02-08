@@ -148,17 +148,16 @@ snapml.SupportVectorMachine(class_weight='balanced', random_state=25, n_jobs=4, 
 snapml.DecisionTreeRegressor(max_depth=8, random_state=45, n_jobs=4).fit(x_train, y_train).predict(x_test) # CPU n_jobs=4 vs GPU use_gpu=True
 
 sklearn.linear_model.LogisticRegression(C=0.01, solver='liblinear').fit(x_train,y_train) # C parameter = 1/regularization strength
-logistic_regression.predict(x_test); logistic_regression.predict_proba(x_test) # predict returns label (either 0 or 1) whereas predict_proba returns [probability for 0, probability for 1]
+logistic_regression.predict(x_test); logistic_regression.predict_proba(x_test); label=np.argmax(predicted_probabilities,axis=1) # predict returns label (either 0 or 1) whereas predict_proba returns [probability for 0, probability for 1]
+sklearn.metrics.accuracy_score(y_test, predictions)
 sklearn.metrics.jaccard_score(y_test, predictions, pos_label=0) # jaccard index = size intersection/size union
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.metrics.classification_report(y_test, predictions)
 # precission=how reliable is it that the predicion is correct; recall=how many of actual labels the is it detecting; F1 score=harmonic average of precission and recall
 sklearn.metrics.log_loss(y_test, prediction_probabilities)
 
 sklearn.svm.SVC(kernel='rbf') .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
+sklearn.svm.SVC(probability=True) .fit(x_train, y_train) .predict_proba(x_test)
+sklearn.svm.SVC(decision_function_shape='ovo') .fit(x_train, y_train) .decision_function(x_test) # For multiple classes: ovo=one.vs.one ovr=one.vs.rest BUT internally always uses ONE vs ONE strategy
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
 sklearn.metrics.classification_report(y_test, predictions)
 sklearn.metrics.f1_score(y_test, predictions, average='weighted'); sklearn.metrics.jaccard_score(y_test, predictions, pos_label="which label mean POSITIVE DETECTION")
-
-LogisticRegression().fit(x_train, y_train).predict_proba(x_test); np.argmax(probability,axis=1)
-predict(x_test)
-accuracy_score(y,predictions)
