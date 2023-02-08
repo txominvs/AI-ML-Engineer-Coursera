@@ -88,6 +88,17 @@
 # - Density estimation
 # - Market basket analysis
 # - Clustering: structure of data/summary/anomaly detection
+#       Unlabeled data segmentation
+#       Recommendation systems similar products, anomalies in bank transaction, genetic groups
+#       Partition based clustering:
+#           Efficient for large DB and sphere-like clusters
+#           k-means, k-median, fuzzy c-means
+#       Hierarchical clustering
+#           tree classification, good for small DB
+#           agglomerative, divisive
+#       Density-based clustering
+#           spatial clusters & noise, arbitrary shaped clustering
+#           DBSCAN
 # OTHERS:
 # - Sequence mining: Markov model, HMM
 # - Recommendation systems
