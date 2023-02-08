@@ -150,7 +150,7 @@ logistic_regression.predict(x_test); logistic_regression.predict_proba(x_test); 
 sklearn.metrics.accuracy_score(y_test, predictions)
 sklearn.metrics.jaccard_score(y_test, predictions, pos_label=0) # jaccard index = size intersection/size union
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.metrics.classification_report(y_test, predictions)
-# precission=how reliable is it that the predicion is correct; recall=how many of actual labels the is it detecting; F1 score=harmonic average of precission and recall
+# precission=how reliable is it that the prediction is correct; recall=how many of the actual labels is it detecting; F1 score=harmonic average of precission and recall
 sklearn.metrics.log_loss(y_test, prediction_probabilities)
 
 sklearn.svm.SVC(kernel='rbf', gamma=0.001, C=100.) .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
