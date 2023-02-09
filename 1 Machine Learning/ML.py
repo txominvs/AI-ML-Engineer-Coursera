@@ -1,3 +1,5 @@
+# TODO honors practice exercise: https://www.coursera.org/learn/machine-learning-with-python/supplement/F0Ugl/project-scenario
+
 # SKILLS: Regression Classification Clustering Scikit learn sklearn Scipy
 
 # SUPERVISED LEARNING
