@@ -87,18 +87,31 @@
 # - Dimension reduction/Feature reduction: Principal Component Analysis
 # - Density estimation
 # - Market basket analysis
-# - Clustering: structure of data/summary/anomaly detection
-#       Unlabeled data segmentation
-#       Recommendation systems similar products, anomalies in bank transaction, genetic groups
-#       Partition based clustering:
+# - CLUSTERING: structure of data/summary (data compression)/anomaly detection (noise removal)
+#       Unlabeled data SEGMENTATION (groups with similar features): recommend similar products, anomalies in bank transaction, genetic groups
+#       >> Partition based clustering:
 #           Efficient for large DB and sphere-like clusters
-#           k-means, k-median, fuzzy c-means
-#       Hierarchical clustering
-#           tree classification, good for small DB
-#           agglomerative, divisive
-#       Density-based clustering
-#           spatial clusters & noise, arbitrary shaped clustering
-#           DBSCAN
+#           ++ k-Median, fuzzy c-Means
+#           ++ k-MEANS
+#               K = number of clusters (parameter)
+#               1) Randomly choose K initial CLUSTER CENTERs
+#               2) Assign the closest CLUSTER CENTER to each DATAPOINT using distance = SQRT (point-center)^2. Creating a "distances matrix" is useful for this purpose
+#               3) Update positions of CLUSTER CENTERs: new position = MEAN[ position of datapoints that are closest to this center ]
+#               4) This approach will iteratively minimize Sum of Squared Error = SUM (point-center)^2
+#               5) Go back to 1) until they CLUSTER CENTERS do not move significantly.
+#               Heuristic algorithm -> may converge to LOCAL minima -> make several runs with different initial conditions
+#               Metrics: smaller is better
+#                   Average distance between DATAPOINTS WITHIN THE SAME CLUSTER
+#                   Average distance between DATAPOINT AND THE CENTROID OF ITS CLUSTER
+#               Optimal K: ELBOW METHOD
+#                   For large K, average distance decreases as 1/SQRT(number of clusters)
+#                   Choose the K value where the average distance goes from SHARPLY decreasing to MILDLY decreasing: ELBOW POINT
+#       >> Hierarchical clustering
+#           Intuitive tree classification, good for small DB
+#           ++ Agglomerative algorithms, Divisive algorithms
+#       >> Density-based clustering
+#           Spatial clusters & noise, arbitrary shaped clustering
+#           ++ DBSCAN
 # OTHERS:
 # - Sequence mining: Markov model, HMM
 # - Recommendation systems
@@ -111,6 +124,7 @@ x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y
 sklearn.preprocessing.LabelEncoder.fit(['group 1', 'group 2', 'group 3']).transform(X)
 sklearn.preprocessing.normalize(X, axis=1, norm='l1', copy=False) #axis=1 means that each ROW will be normalized as a vector
 sklearn.datasets.load_iris().data .target; # data format [each sample [features], [next sample's features] ...]
+coordinates, which_cluster_they_belong = sklearn.datasets.make_blobs(n_samples="how many points", centers=["center positions [1,2] [-1,2]"], cluster_std="size of each cluster")
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
 dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
@@ -119,6 +133,7 @@ plt.hist(dataframe[["column1"]].values, 6, histtype='bar', facecolor='g'); plt.s
 plt.pie(dataframe[["column_name"]].value_counts().values, labels=dataframe[["column_name"]].unique(), autopct='%1.3f%%'); plt.show()
 dataframe.iloc[row_number_slice, column_number_slice]
 dataframe.isna().sum(); data.dropna(inplace=True) # Detect missing values: isna() replaces each value with True/False and sum() sums all ROWs into a single one. Dropna = remove rows with missing data
+dataframe.groupby('name of the column').mean()
 dataframe.drop(columns=["column_names"]); dataframe.drop(['column_names'], axis=1)
 dataframe.abs().mean() # Useful for calculating MAE: abs() replaces values with abs and mean into a single ROW
 dataframe[(dataframe['column_name'] >= 30) & (dataframe['another_column'] < 200)]
@@ -135,8 +150,7 @@ regr.predict(x); regr.score(x, y); sklearn.metrics.r2_score(x,y) # Explained var
 
 neigh = sklearn.neighbors.KNeighborsClassifier(n_neighbors = k).fit(x_train, y_train)
 predictions = neigh.predict(x_test); sklearn.metrics.accuracy_score(y_test, predictions) # Jaccard score
-mean_accuracies = [metrics.accuracy_score(y_test, KNeighborsClassifier(n_neighbors=k).fit(x_train,y_train).predict(x_test)
-) for k in range(1,9+1)]; optimal_k_value = mean_accuracies.argmax()+1
+mean_accuracies = [metrics.accuracy_score(y_test, KNeighborsClassifier(n_neighbors=k).fit(x_train,y_train).predict(x_test)) for k in range(1,9+1)]; optimal_k_value = mean_accuracies.argmax()+1
 
 sklearn.tree.DecisionTreeClassifier(criterion="entropy", max_depth=4).fit(x_train,y_train, sample_weight=sklearn.utils.class_weight.compute_sample_weight('balanced', y_train)).predict(x_test)
 sklearn.metrics.accuracy_score(y_test, predictions) # Jaccard score
@@ -170,3 +184,9 @@ sklearn.svm.SVC(decision_function_shape='ovo') .fit(x_train, y_train) .decision_
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
 sklearn.metrics.classification_report(y_test, predictions)
 sklearn.metrics.f1_score(y_test, predictions, average='weighted'); sklearn.metrics.jaccard_score(y_test, predictions, pos_label="which label mean POSITIVE DETECTION")
+
+model = sklearn.cluster.KMeans(init = "k-means++", n_clusters = 4, n_init = 12) .fit(datapoint_coordiantes) # init=which initial condition chooser, n_init=how many different initial conditions test and choose the best among them, n_clusters=k value
+model.cluster_centers_; model.labels_ # labels=which cluster has been asigned to each training datapoint
+
+
+
