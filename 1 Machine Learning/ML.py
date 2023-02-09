@@ -94,8 +94,8 @@
 #           ++ k-Median, fuzzy c-Means
 #           ++ k-MEANS
 #               K = number of clusters (parameter)
-#               1) Randomly choose K initial CLUSTER CENTERs
-#               2) Assign the closest CLUSTER CENTER to each DATAPOINT using distance = SQRT (point-center)^2. Creating a "distances matrix" is useful for this purpose
+#               1) Randomly choose K initial CLUSTER CENTERs: either some random poisition or some random datapoints
+#               2) Assign the closest CLUSTER CENTER to each DATAPOINT using either Euclidean distance = SQRT (point-center)^2 or Minkowsky distance or cosine similarity. Creating a "distances matrix" is useful for this purpose
 #               3) Update positions of CLUSTER CENTERs: new position = MEAN[ position of datapoints that are closest to this center ]
 #               4) This approach will iteratively minimize Sum of Squared Error = SUM (point-center)^2
 #               5) Go back to 1) until they CLUSTER CENTERS do not move significantly.
