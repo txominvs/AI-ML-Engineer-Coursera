@@ -1,8 +1,7 @@
-#Until 38
-# SKILLS: Regression Classification Clustering Scikit learn Scipy
+# SKILLS: Regression Classification Clustering Scikit learn sklearn Scipy
 
 # SUPERVISED LEARNING
-# - Regression/Estimation: continous values (simple regression 1 feature, multiple more features)
+# - Regression/Estimation: continous values (simple regression -> 1 feature ; multiple regression -> more features)
 #       >> Ordinal, poisson, fast forest quantile, linear (analytic formulas! or Ordinary Least Squares or Gradient Descent),
 #       >> Polynomial, Lasso, Stepwise, ridge, bayesian linear, Neural Network,
 #       >> Decision forest, boosted decision tree, K-Nearest Neighbors
