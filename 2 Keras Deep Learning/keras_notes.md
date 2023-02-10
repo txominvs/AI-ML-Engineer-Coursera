@@ -18,3 +18,4 @@
 ## Back propagation
 
 ## Activation functions
+- Sigmoid(x) = 1/(1 + exp( - x))
