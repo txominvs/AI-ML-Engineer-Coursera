@@ -23,12 +23,10 @@
 ### Repeat
 - Until: number of epoch or error threshold
 
-> ### PRO TIP!
-> We do *not* use SIGMOID in the hidden layers of the network, just the output layer.
-> Both the VALUE and the DERIVATIVE of the sigmoid functions are [-1,1].
-> So, when we *Back Propagate*, we are multiplying together factors that are less than 1
-> which results in a learning rate that decreases from the ouput layer deep into the network.
-> *Earliest layers in the network train too slowly.* The learning rate takes too long and accuracy compromised.
+> ### PRO TIP! Vanishing Gradient Problem
+> We do *not* use SIGMOID in the hidden layers of the network, just the output layer. Both the VALUE and the DERIVATIVE of the sigmoid functions are [-1,1]. So, when we Back Propagate, we are multiplying together factors that are less than 1 which results in a learning rate that decreases from the ouput layer deep into the network.
+>
+> **Earlier layers in the network train too slowly.** The training takes too long and accuracy is compromised.
 
 ## Cost funciton
 - Loss function
@@ -39,4 +37,18 @@
 - the step size automatically decreases as we approach the minimum
 
 ## Activation functions
-- Sigmoid(x) = 1/(1 + exp( - x))
+- Logistic function = Sigmoid(x) = 1/(1 + exp( - x))
+    - Quite flat at infinity: Vanishing Gradient Problem
+    - Not negative values: no symmetry around the origin, all values passed to the next neuron are positive
+- Hiperbolic tangent tanh(x) = [exp(x)-exp(-x)] / [exp(x)+exp(-x)]
+    - Basically a more simmetric sigmoid
+    - Still vanishing gradient problem
+- Rectified Linear Unit ReLU(x) = zero for negatives identity for positives
+    - **BEST most widely used!** in the Hidden layers of the network
+- Softmax(x) = exp(x) / normalize all output
+    - Output layer of classification problems
+    - Probability of each class
+- Others:
+    - Binary step function: 0 for negatives and 1 for positives
+    - Linear function: basically identity, no activation fx
+    - Leaky ReLU(x)
