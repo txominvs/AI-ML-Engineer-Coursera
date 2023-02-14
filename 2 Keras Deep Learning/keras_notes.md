@@ -8,6 +8,7 @@
 - Hidden layers: middle set of nodes
 - Output layer: last
 - Node: neuron
+- Dense network: every node is connected to all nodes in the previous and next layers
 
 ## Learning
 ### Forward propagation
@@ -52,3 +53,43 @@
     - Binary step function: 0 for negatives and 1 for positives
     - Linear function: basically identity, no activation fx
     - Leaky ReLU(x)
+
+# AI frameworks
+- TensorFlow (Google)
+- Keras (easy, runs on TensorFlow)
+- PyTorch (academic, Torch library in Lua)
+- Theano (no longer supported)
+
+# Regression with Keras
+
+```python
+model = keras.models.Sequential()
+model.add(keras.layers.Dense(5, activation='relu', input_shape=(how_many_features,)))
+model.add(keras.layers.Dense(5, activation='relu'))
+model.add(keras.layers.Dense(1)) # regression = no output activation
+
+model.complile(optimizer='adam', loss='mean_squared_error', metrics=['mae']) # regression = loss MSE
+model.fit(x, y)
+
+predictions = model.predict(x)
+```
+
+# Classification with Keras
+
+```python
+model = keras.models.Sequential()
+model.add(keras.layers.Dense(5, activation='relu', input_shape=(how_many_features,)))
+model.add(keras.layers.Dense(5, activation='relu'))
+model.add(keras.layers.Dense(4, activation='softmax')) # classification = softmax
+
+model.complile(
+    optimizer='adam',
+    loss='categorical_crossentropy', # classification
+    metrics=['accuracy'])
+
+y_onehotencoded = keras.utils.to_categorical(y) # classification
+
+model.fit(x, y_onehotencoded, epochs=10)
+
+predictions = model.predict(x)
+```

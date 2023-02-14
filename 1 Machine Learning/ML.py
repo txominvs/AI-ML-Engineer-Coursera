@@ -128,14 +128,17 @@ sklearn.datasets.load_iris().data .target; # data format [each sample [features]
 coordinates, which_cluster_they_belong = sklearn.datasets.make_blobs(n_samples="how many points", centers=["center positions [1,2] [-1,2]"], cluster_std="size of each cluster")
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
-dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]; dataframe.head();
+dataframe.head(); dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]
 dataframe[["column1","columname2"]].hist(); plt.show(); dataframe[["column_name"]].unique();
 plt.hist(dataframe[["column1"]].values, 6, histtype='bar', facecolor='g'); plt.show()
 plt.pie(dataframe[["column_name"]].value_counts().values, labels=dataframe[["column_name"]].unique(), autopct='%1.3f%%'); plt.show()
 dataframe.iloc[row_number_slice, column_number_slice]
-dataframe.isna().sum(); data.dropna(inplace=True) # Detect missing values: isna() replaces each value with True/False and sum() sums all ROWs into a single one. Dropna = remove rows with missing data
+dataframe.isnull().sum(); dataframe.isna().sum(); data.dropna(inplace=True) # Detect missing values: isna() replaces each value with True/False and sum() sums all ROWs into a single one. Dropna = remove rows with missing data
 dataframe.groupby('name of the column').mean()
+normalized_dataframe = (dataframe - dataframe.mean()) / dataframe.std()
+
 dataframe.drop(columns=["column_names"]); dataframe.drop(['column_names'], axis=1)
+dataframe['column_name']; dataframe[['column_1', 'another_column']]; dataframe[dataframe.columns[dataframe.columns != 'feature_column_name_I_want_to_remove']]
 dataframe.abs().mean() # Useful for calculating MAE: abs() replaces values with abs and mean into a single ROW
 dataframe[(dataframe['column_name'] >= 30) & (dataframe['another_column'] < 200)]
 dataframe['time_column'] = pandas.to_datetime(dataframe['time_column']); dataframe['time_column'].dt.hour # also dt.weekday and some_date-anther_date_substract
