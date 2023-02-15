@@ -48,11 +48,11 @@
 ### Repeat
 - Until: number of epoch or error threshold
 
-> ### PRO TIP! Vanishing Gradient Problem
-> **We do NOT use Sigmoid in the hidden layers of the network,** just the output layer. Both the VALUE and the DERIVATIVE of the sigmoid functions are [-1,1]. So, when we Back Propagate, we are multiplying together factors that are less than 1 which results in a learning rate that decreases from the ouput layer deep into the network.
->
-> **Earlier layers in the network train too slowly.** The training takes too long and accuracy is compromised.
-> This problem is solved by using the **ReLU activation** in the hidden layers, instead of the **Sigmoid activation**. This was a great advancement in the field.
+### PRO TIP! Vanishing Gradient Problem
+**We do NOT use Sigmoid in the hidden layers of the network,** just the output layer. Both the VALUE and the DERIVATIVE of the sigmoid functions are [-1,1]. So, when we Back Propagate, we are multiplying together factors that are less than 1 which results in a learning rate that decreases from the ouput layer deep into the network.
+
+- **Earlier layers in the network train too slowly.** The training takes too long and accuracy is compromised.
+- This problem is solved by using the **ReLU activation** in the hidden layers, instead of the **Sigmoid activation**. This was a great advancement in the field.
 
 ## Cost funciton
 - Loss function
