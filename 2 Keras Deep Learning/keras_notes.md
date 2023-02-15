@@ -9,6 +9,30 @@
 - Output layer: last
 - Node: neuron
 - Dense network: every node is connected to all nodes in the previous and next layers
+## Why they took off now
+- Advancements (ReLU functions), more data available (avoids overfitting), greater computing power
+## Types and architectures of Neural Networks
+- Shallow: one or few hidden layer
+- Deep: many hidden layers & neurons in each layer
+### Supervised
+- Convolutional Neural Networks (CNN)
+    - Specially tailored for images (Computer Vision) -> less parameters than flatten_image() and fully connected network
+    - Input_Shape = (height of the image, width of the image, color chanels = 1 grayscale 3 rgb)
+    - Convoltional layer = Filter: a **kernel** makes **strides** through the whole image and we save the **dot product** of kernel and image. Finally an optional **ReLU** activation is applied
+    - Max Pooling: slide a box (strides) through the image and only keep the largest value in the box
+    - Average Pooling: slide a box but save the average value inside the box
+    - Finally, flatten() and fully connected
+- Recurrent Neural Networks (RNN)
+    - Networks with loops: INPUT = input features + output of the network for the last fed input
+    - Good for sequences & patterns: text, genomes, perception of time!
+    - Long Short-Term Model (LSTM) popular example: image generation, video captions
+### Unsupervised
+- Autoencoders
+    - Data compression algorithm: automatically learns compression functions
+    - Noise removal and dimensionality reduction, more advanced than Principal Component Analysis (PCA) because of non-linearity!
+    - Automatically tunes its parameters so that Network output (target) resembles Network input (features)
+        - My intuition: Encoder (Dense layer with 10, 8, 4) + Decoder (Dense layer with 4, 8, 10)
+    - Restricted Boltzman Machines (RBM) popular example: fix imbalanced dataset, estimate missing values, automatic feature extraction
 
 ## Learning
 ### Forward propagation
@@ -55,8 +79,8 @@
     - Leaky ReLU(x)
 
 # AI frameworks
-- TensorFlow (Google)
-- Keras (easy, runs on TensorFlow)
+- TensorFlow (most popular in production, Google)
+- Keras (easy, Google, runs on TensorFlow)
 - PyTorch (academic, Torch library in Lua)
 - Theano (no longer supported)
 
@@ -92,4 +116,21 @@ y_onehotencoded = keras.utils.to_categorical(y) # classification
 model.fit(x, y_onehotencoded, epochs=10)
 
 predictions = model.predict(x)
+```
+
+# Convolutional Neural Network
+```python
+model = keras.models.Sequential()
+
+model.add(keras.layers.Conv2D(16, kernel_size=2, strides=1, activation='relu',
+    input_shape=(image_height,image_width,color_channels,) ))
+model.add(keras.layers.MaxPooling2D(pool_size=2, strides=2))
+
+model.add(keras.layers.Conv2D(32, kernel_size=2, activation='relu')) # strides = None = 1
+model.add(keras.layers.MaxPooling2D(pool_size=2)) # strides = None = pool_size
+
+model.add(keras.layers.Flatten())
+
+model.add(keras.layers.Dense(100, activation='relu'))
+model.add(keras.layers.Dense(how_many_classes_output, activation='softmax')) # classification
 ```
