@@ -24,7 +24,7 @@ model.add(keras.layers.Dense(50, activation='relu'))
 # REGRESSION #
 ##############
 
-model.add(keras.layers.Dense(1)) # regression -> no loss
+model.add(keras.layers.Dense(1)) # regression -> no activation
 
 model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
 
@@ -41,5 +41,32 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 y_train = keras.utils.to_categorical(y_train) # one-hot encode outputs
 
 model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, verbose=2)
+
+loss_value, *metrics_values = model.evaluate(x_test, y_test, verbose=0)
+
+#########################
+# CONVOLUTIONAL NETWORK #
+#########################
+
+x_train = x_train.reshape(x_train.shape[0], 28, 28, 1).astype('float32')
+x_train = x_train / 255
+
+y_train = keras.utils.to_categorical(y_train)
+
+model = keras.models.Sequential()
+model.add(keras.layers.Conv2D(16, kernel_size=5, strides=1, # default stride = 1
+    activation='relu', input_shape=(28, 28, 1)))
+model.add(keras.layers.MaxPool2D(pool_size=2, strides=2)) # default stride = pool size
+
+model.add(keras.layers.Conv2D(8, kernel_size=2, activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=2))
+
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(100, activation='relu'))
+model.add(keras.layers.Dense(num_classes, activation='softmax'))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy',  metrics=['accuracy'])
+
+model.fit(x_train, y_train, validation_data=(y_test, y_test), epochs=10, batch_size=200, verbose=2)
 
 loss_value, *metrics_values = model.evaluate(x_test, y_test, verbose=0)
