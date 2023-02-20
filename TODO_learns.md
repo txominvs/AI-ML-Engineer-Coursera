@@ -8,3 +8,13 @@ https://www.coursera.org/learn/data-analysis-with-python?specialization=ibm-data
 https://www.coursera.org/learn/sql-data-science?specialization=ibm-data-analyst
 
 Learn: https://aws.amazon.com/es/what-is/restful-api/
+
+
+== Things I should have a look at == 
+
+Docker https://www.youtube.com/watch?v=gAkwW2tuIqE
+Unit Testing https://www.youtube.com/watch?v=DhUpxWjOhME
+REST APIs. https://www.youtube.com/watch?v=-MTSQjw5DrM
+CI/CD pipelines https://www.youtube.com/watch?v=scEDHsr3APg
+Agile Software Development Methodologies & Scrum
+Django
