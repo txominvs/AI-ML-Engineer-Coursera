@@ -21,5 +21,12 @@ cv2.imwrite(file_name_with_another_extension, image)
 grayscaled_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 plt.imshow(grayscaled_image, cmap='gray'); plt.show()
 
-reference_to_image_array = image # points to the same object in memory
+reference_to_image_array = image # points to the same object in memory id(old_var)==id(new_var)
 copy_of_image = image.copy()
+
+flipped_image = cv2.flip(image, flipcode) # flipcode = 0 upside down / 1 seen in a mirror / -1 horizontally and vertically flipped  
+rotated_image = cv2.rotate(image, rotatecode) # rotatecode = cv2.ROTATE_90_CLOCKWISE cv2.ROTATE_90_COUNTERCLOCKWISE cv2.ROTATE_180
+
+cropped_image = image[upper:lower+1, left:right+1, :]
+cv2.rectangle(image, pt1=(left, upper), pt2=(right, lower), color=(0, 255, 0), thickness=3) 
+cv2.putText(img=image, text='whatever you want to say', org=(left, lower), color=(255,0,0), fontFace=4, fontScale=5, thickness=2)
