@@ -2,15 +2,16 @@
 from PIL import Image
 
 with Image.open(file_name) as image:
+    # image.format = "PNG"
+    # image.size = 512, 512
+    # image.mode = "RGB"
 
 
-    image.show() # open default viewer
+    image.show(title="Title of the image") # open default viewer
     import matplotlib.pyplot as plt; plt.imshow(image); plt.show() # BEST!
 
     width, height = image.size # width=cols height=rows
 
-
-    assert image.mode == "RGB"
     access_to_pixel_color = image.load()
     color_channels = access_to_pixel_color[pixel_y, pixel_x]
 
@@ -18,16 +19,14 @@ with Image.open(file_name) as image:
 
     image.save(new_name_with_different_extension)
 
-
     from PIL import ImageOps
     grayscaled = ImageOps.grayscale(image)
-    assert grayscaled.mode == "L"
+    # grayscaled_image.mode == "L"
 
     down_sampled = grayscaled.quantize(256 // 2) # instead of 0...255 turn it into 0...127
 
-    
     import numpy as np
-    reference_access_to_pixel_values =  np.asarray(image) # points to same location in memory
+    reference_access_to_pixel_values =  np.asarray(image) # points to same location in memory = [red channel [rows x cols], green channel [rows x cols], red channel [rows x cols]]
     copy_of_image_into_array =          np.array(image)
     yet_another_copy =                  reference_access_to_pixel_values.copy()
 
