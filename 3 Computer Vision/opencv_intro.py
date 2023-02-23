@@ -30,3 +30,12 @@ rotated_image = cv2.rotate(image, rotatecode) # rotatecode = cv2.ROTATE_90_CLOCK
 cropped_image = image[upper:lower+1, left:right+1, :]
 cv2.rectangle(image, pt1=(left, upper), pt2=(right, lower), color=(0, 255, 0), thickness=3) 
 cv2.putText(img=image, text='whatever you want to say', org=(left, lower), color=(255,0,0), fontFace=4, fontScale=5, thickness=2)
+
+cv2.calcHist([image], channels=[ 0 ], mask=None, histSize=[256], ranges=[0,255])
+# new color = alpha*color + beta WHERE alpha=contrast control AND beta=brightness control
+# Also, the new color is clipped in the range [0, 255]
+# Make image brighter alpha=3 beta=-200 # Invert image colors alpha=-1 beta=255
+new_image = cv2.convertScaleAbs(image, alpha=-1, beta=255)
+new_image = cv2.equalizeHist(image) # Histogram equalization: flatten histogram -> improved contrast
+ret, new_image = cv2.threshold(image, threshold, maxval, cv2.THRESH_BINARY) # if color>=threshold: color = max else: color = 0
+ret, new_image = cv2.threshold(image, 0, 255, cv2.THRESH_OTSU) # ret = automatically determined threshold
