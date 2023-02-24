@@ -29,6 +29,7 @@ with Image.open(file_name) as image:
     copy_of_image = image.copy()
     
     import numpy as np # IMAGE AS NUMPY ARRAY [red channel [rows x cols], green channel [rows x cols], red channel [rows x cols]]
+    # WATCH OUT! For all arrays "dtype=uint8" so values overflow 256->0 257->1 258->2 and so on...
     reference_access_to_pixel_values =  np.asarray(image) # points to same location in memory
     another_reference =                 reference_access_to_pixel_values # id(old_variable) == id(new_variable)
     copy_of_image_into_array =          np.array(image)
@@ -60,3 +61,19 @@ with Image.open(file_name) as image:
     
     image.paste(small_image, box=(left, upper))
     image_array[upper:lower, left:right, :] = small_image_array[upper:lower, left:right, :]
+
+    # Affine transformations = A*X + B
+    # Scaling + interpolation
+    # Translation + fill zeros and larger
+    # Rotation
+
+    new_image = image.resize(size=(new_width, new_height))
+    new_image = image.rotate(counter_clockwise_angle_in_degrees)
+
+    # singular value decomposition for GrayScale images
+    U, s, V = np.linalg.svd(grayscaled, full_matrices=True)
+    S = np.diag(s)
+    recover_image = U @ S @ V
+    compressed_S = S[:, :n_components]
+    compressed_V = V[:n_components, :]
+    compresed_image = U @ compressed_S @ compressed_V

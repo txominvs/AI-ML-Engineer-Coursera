@@ -1,6 +1,7 @@
 import cv2
 
 image = cv2.imread(file_name, flag=cv2.IMREAD_COLOR) # default optional flag, returns a NUMPY ARRAY with shape (row=height col=width channels)
+# NUMPY ARRAY "dtype=uint8" so values overflow 256->0 257->1 258->2 and so on...
 load_image_into_grayscale = cv2.imread(file_name, cv2.IMREAD_GRAYSCALE) # load grayscale
 
 rows, columns, color_channel = image.shape #rows=height(top to bottom) cols=width(left to right) 0=blue 1=green 2=red
@@ -39,3 +40,17 @@ new_image = cv2.convertScaleAbs(image, alpha=-1, beta=255)
 new_image = cv2.equalizeHist(image) # Histogram equalization: flatten histogram -> improved contrast
 ret, new_image = cv2.threshold(image, threshold, maxval, cv2.THRESH_BINARY) # if color>=threshold: color = max else: color = 0
 ret, new_image = cv2.threshold(image, 0, 255, cv2.THRESH_OTSU) # ret = automatically determined threshold
+
+new_image = cv2.resize(image, None, fx=2, fy=1, interpolation=cv2.INTER_CUBIC) # fx=horizontal scale factor / fy=vertical scale factor / cv2.INTER_CUBIC cv2.INTER_NEAREST
+new_image = cv2.resize(image, (new_columns, new_rows), interpolation=cv2.INTER_CUBIC)
+new_image = cv2.warpAffine(image, matrix, (new_columns:=output_width, new_rows:=output_height))
+matrix = np.array([[1,0,horizontal_translation],[0,1,vertical_translation]])
+matrix = cv2.getRotationMatrix2D(center=(width//2, height//2), angle=rotation_angle, scale=1)
+
+# singular value decomposition for GrayScale images
+U, s, V = np.linalg.svd(grayscaled, full_matrices=True)
+S = np.diag(s)
+recover_image = U @ S @ V
+compressed_S = S[:, :n_components]
+compressed_V = V[:n_components, :]
+compresed_image = U @ compressed_S @ compressed_V
