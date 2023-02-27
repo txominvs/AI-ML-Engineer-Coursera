@@ -6,6 +6,8 @@ with Image.open(file_name) as image:
     # image.size = 512, 512
     # image.mode = "RGB"
 
+    tv_noise_array = np.random.normal(0, 255, (rows, columns, 3)).astype(np.uint8)
+    image = Image.fromarray(tv_noise_array) # creates a PIL Image from an array
 
     image.show(title="Title of the image") # open default viewer
     import matplotlib.pyplot as plt; plt.imshow(image); plt.show() # BEST! show image object
@@ -77,3 +79,26 @@ with Image.open(file_name) as image:
     compressed_S = S[:, :n_components]
     compressed_V = V[:n_components, :]
     compresed_image = U @ compressed_S @ compressed_V
+
+    from PIL import ImageFilter
+    # low pass filter: smoother + nose removal + blur
+    kernel = np.ones((5,5))/(5*5)
+    kernel_filter = ImageFilter.Kernel((5,5), kernel.flatten())
+    new_image = image.filter(kernel_filter)
+
+    # gaussian blur
+    new_image = image.filter(ImageFilter.GaussianBlur(radius=4))
+
+    # sharpen edges
+    kernel = np.array([[-1,-1,-1], 
+                    [-1, 9,-1],
+                    [-1,-1,-1]]); kernel = ImageFilter.Kernel((3,3), kernel.flatten())
+    new_image = image.filter(kernel)
+    # sharpen edges
+    new_image = image.filter(ImageFilter.SHARPEN)
+
+    # edge detection
+    new_image = image.filter(ImageFilter.EDGE_ENHANCE).filter(ImageFilter.FIND_EDGES)
+
+    # median filter: noise removal without blurring edges!
+    new_image = image.filter(ImageFilter.MedianFilter)

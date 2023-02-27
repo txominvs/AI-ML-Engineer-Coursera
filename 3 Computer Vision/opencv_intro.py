@@ -1,3 +1,4 @@
+import numpy as np
 import cv2
 
 image = cv2.imread(file_name, flag=cv2.IMREAD_COLOR) # default optional flag, returns a NUMPY ARRAY with shape (row=height col=width channels)
@@ -40,6 +41,9 @@ new_image = cv2.convertScaleAbs(image, alpha=-1, beta=255)
 new_image = cv2.equalizeHist(image) # Histogram equalization: flatten histogram -> improved contrast
 ret, new_image = cv2.threshold(image, threshold, maxval, cv2.THRESH_BINARY) # if color>=threshold: color = max else: color = 0
 ret, new_image = cv2.threshold(image, 0, 255, cv2.THRESH_OTSU) # ret = automatically determined threshold
+ret, new_image = cv2.threshold(src=image, thresh=0, maxval=255,
+                    type=cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV) # select THRESH value automatically with OTSU and INVERT output image so if color <= threshold: color = max else: color = 0
+
 
 new_image = cv2.resize(image, None, fx=2, fy=1, interpolation=cv2.INTER_CUBIC) # fx=horizontal scale factor / fy=vertical scale factor / cv2.INTER_CUBIC cv2.INTER_NEAREST
 new_image = cv2.resize(image, (new_columns, new_rows), interpolation=cv2.INTER_CUBIC)
@@ -54,3 +58,20 @@ recover_image = U @ S @ V
 compressed_S = S[:, :n_components]
 compressed_V = V[:n_components, :]
 compresed_image = U @ compressed_S @ compressed_V
+
+noisy_image = image + np.random.normal(0,15, image.shape).astype(np.uint8)
+
+# low pass filter: smoother + nose removal + blur
+kernel = np.ones(3,3)/(3*3)
+# sharpen edges
+kernel = np.array( [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]] )
+# apply filter
+new_image = cv2.filter2D(src=image, ddepth=-1, kernel=kernel) # ddepth=-1 default, 8 bits times 3 channels
+# gaussian blur
+new_image = cv2.GaussianBlur(image, (5,5), sigmaX=3.1, sigmaY=3.1)
+# gradient filter
+gradient_x_image = cv2.Sobel(src=image, ddepth=cv2.CV_16S, dx=1, dy=0, ksize=3) # columnwise gradient [1 0 -1] [2 0 -2] [1 0 -1], ddepth truncate to 16 bits
+gradient_y_image = cv2.Sobel(src=image, ddepth=cv2.CV_16S, dx=0, dy=1, ksize=3) # rowwise gradient [1 2 1] [0 0 0] [-1 -2 -1], ddepth truncate to 16 bits
+gradient_magnitude_image = cv2.addWeighted(cv2.convertScaleAbs(gradient_x_image), 0.5, cv2.convertScaleAbs(gradient_y_image), 0.5, 0) # convertScaleAbs = 16 bits [-255 +255] to 8 bits [0 +255]
+# median blur: noise removal without blurring edges!
+new_image = cv2.medianBlur(image, ksize=5)
