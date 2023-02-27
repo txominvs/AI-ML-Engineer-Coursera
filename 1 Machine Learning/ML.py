@@ -26,7 +26,28 @@
 #           Entropy of a group of data = - SUM(label) P(label) * log P(label) where P(label)=how many points belong to label/all datapoints
 #           Entropy [0 data is very pure, +1 data is very random] = amount of admixture in a group
 #           Each branching increases INFORMATION GAIN as much as possible = entropy before splitting - 1/number of datapoints * SUM(split) size of chunk * entropy of each chunk
-#       >> Naïve Bayes, Linear Discriminant Analysis
+#       >> Naïve Bayes
+#           SCORE(this class) is proportional to probability(this class) = 
+#               Proportion(this class happens/all classes) which is called PRIOR PROBABILITY
+#               x Probability(feature appears N times | this class)
+#               x ... for all features
+#           CLASSIFIED CLASS = the class that has the highest SCORE(class)
+#           Quite good classifier but probability score numerical values not very accurate...
+#           - Multinomial Naive Bayes
+#               Assumes features have MULTINOMIAL DISTRIBUTION = N!/n1!n2!n3! * p1^n1 * p2^n2 * p3^n3
+#               Probability(certain feature appears N times | this class) = [Probability(feature appears | this class)] ^ [how many N times it appears]
+#               where Probability(feature appears | this class) = how many times this feature appears / total count of all features
+#               ++ PSEUDO-COUNTS and ALPHA (=1 usually)
+#                   In order to avoid Probability(feature | class)=0 we give a minimum of "ALPHA" counts to each feature
+#                   Probability(feature | class) = (how many times + ALPHA) / (how many in total + ALPHA * NUMBER OF FEATURES)
+#               ++ Works well in practice! Ignores ORDERING and CORRELATIONS BETWEEN FEATURES
+#           - Gaussian Naive Bayes
+#               Assumes features have GAUSSIAN DISTRIBUTION = e^(-(x_1-mean_1)^2/2sigma_1^2) e^(-(x_2-mean_2)^2/2sigma_2^2)
+#               In order to avoid UNDEFLOW and SMALL NUMBERS we use LOG_SCORE(this class) = log SCORE(this class) =
+#                   log[ prior probability] -(x_1-mean_1)^2/2sigma_1^2 -(x_2-mean_2)^2/2sigma_2^2
+#               Given that Gaussians are highly localized, some variables can have a much larger say in the classification
+#                   process so few features could do the job (check using CROSS VALIDATION)
+#       >> Linear Discriminant Analysis
 #       >> K-Nearest Neighbor (KNN)
 #           Select the K datapoints closest to the one we want to predict
 #           Prediction = most popular class among its K neighbors
@@ -192,5 +213,5 @@ sklearn.metrics.f1_score(y_test, predictions, average='weighted'); sklearn.metri
 model = sklearn.cluster.KMeans(init = "k-means++", n_clusters = 4, n_init = 12) .fit(datapoint_coordiantes) # init=which initial condition chooser, n_init=how many different initial conditions test and choose the best among them, n_clusters=k value
 model.cluster_centers_; model.labels_ # labels=which cluster has been asigned to each training datapoint
 
-
-
+sklearn.naive_bayes.MultinomialNB(alpha=1.0) .fit(x_train, y_train) .predict(x_test) # good classifier but predict_proba() = not accurate probabilies
+sklearn.naive_bayes.GaussianNB .fit(x_train, y_train) .predict(x_test) # good classifier but predict_proba() = not accurate probabilies
