@@ -89,7 +89,7 @@ with Image.open(file_name) as image:
     # gaussian blur
     new_image = image.filter(ImageFilter.GaussianBlur(radius=4))
 
-    # sharpen edges
+    # sharpen details of image
     kernel = np.array([[-1,-1,-1], 
                     [-1, 9,-1],
                     [-1,-1,-1]]); kernel = ImageFilter.Kernel((3,3), kernel.flatten())
