@@ -75,3 +75,21 @@ gradient_y_image = cv2.Sobel(src=image, ddepth=cv2.CV_16S, dx=0, dy=1, ksize=3) 
 gradient_magnitude_image = cv2.addWeighted(cv2.convertScaleAbs(gradient_x_image), 0.5, cv2.convertScaleAbs(gradient_y_image), 0.5, 0) # convertScaleAbs = 16 bits [-255 +255] to 8 bits [0 +255]
 # median blur: noise removal without blurring edges!
 new_image = cv2.medianBlur(image, ksize=5)
+
+
+# K-Nearest Neighbors using OpenCV
+training_images = []
+for image in images:
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    image = cv2.resize(image, (32, 32))
+    image = image.flatten()
+    training_images.append(image)
+training_images = np.array(training_images).astype('float32') # OpenCV only identifies arrays of type float32 for the training samples
+training_labels = np.array(training_labels).astype(int).reshape( (len(train_labels), 1) ) # OpenCV works with labels as [[0], [1], [0], [1], [1], ...]
+train_samples, test_samples, train_labels, test_labels = sklearn.model_selection.train_test_split(training_images, training_labels, test_size=0.2)
+knn = cv2.ml.KNearest_create()
+knn.train(train_samples, cv2.ml.ROW_SAMPLE, train_labels)
+_unused, predictions, neighbor_labels, neighbor_distances = knn.findNearest(test_samples, k=k_value)
+sklearn.metrics.confusion_matrix(test_labels, predictions, labels=[0, 1])
+correct_accuracy = np.count_nonzero(test_labels == predictions) / len(test_labels)
+knn.save('knn_samples.yml')
