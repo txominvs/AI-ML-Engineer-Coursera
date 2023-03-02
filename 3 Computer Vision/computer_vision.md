@@ -11,6 +11,21 @@
 
 # Image classification
 
+- z = b + SUM_i x_i*w_i
+- probability = 1/(1+exp(-z)) sigmoid
+- Loss function = difference between prediction and actual label. Not-smooth parabola with a minimum
+    - Cross entropy loss = difference between sigmoid probability and actual label. Smooth parabola with a minimum
+- Cost function = total loss = SUM of losses for all points in the dataset
+- Gradient Descent: new value = value - step * slope
+    - Low learning rate = too small or stuck
+    - High learning rate = overshoot optimal value
+- Batch gradient descent = loss function with all samples of the dataset at once
+    - Iteration = weights have been updated
+    - Batch size = how many samples before weights updated
+    - Iterations = how many samples in dataset / batch size
+    - Mini-batch gradient descent = loss function for a few datapoints at once
+    - Epoch = all samples of the dataset have gone through training
+
 # Your IBM Cloud Feature Code:
 
 
