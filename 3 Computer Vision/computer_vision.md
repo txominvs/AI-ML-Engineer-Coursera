@@ -26,6 +26,13 @@
     - Mini-batch gradient descent = loss function for a few datapoints at once
     - Epoch = all samples of the dataset have gone through training
 
+# Multi-class: more than 2 classes
+- Linea Classifier with Softmax: similar to `argmax_i(z_i)`,chooses the side of the hyperplane with the maximum value
+    e^(value) / NORMALIZATION
+- One-vs-rest (good for Support Vector Machines SVM)
+- One-vs-one (good for Support Vector Machines SVM)
+# Multi-label: checkboxes
+
 # Your IBM Cloud Feature Code:
 
 
