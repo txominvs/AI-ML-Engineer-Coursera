@@ -8,7 +8,7 @@ validation_dataset  = dsets.MNIST(root='./save_them_here', train=False, download
 plt.imshow(train_dataset[index_of_the_datapoint][0].numpy().reshape(28, 28), cmap='gray'); plt.show()
 train_dataset[0][0].view(-1,28*28).shape
 
-class SoftMax(nn.Module):
+class linear_model_trained_for_softmax(nn.Module):
     def __init__(self, input_size, output_size):
         super().__init__()
         self.linear = nn.Linear(input_size, output_size)
@@ -16,7 +16,7 @@ class SoftMax(nn.Module):
         z = self.linear(x)
         return z
 
-model = SoftMax(input_dim, output_dim)
+model = linear_model_trained_for_softmax(input_dim, output_dim)
 w = list(model.parameters())[0]; w=model.state_dict()['linear.weight'].data; b = list(model.parameters())[1]
 
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
