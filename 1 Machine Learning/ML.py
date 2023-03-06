@@ -64,7 +64,8 @@
 #       >> Support Vector Machines (SVM)
 #           First, map data to a HIGHER DIMENSIONAL SPACE using KERNELLING: linear, polynomial, Radial Basis Functions, Sigmoid
 #           Then, separate data using a HYPERPLANE (once the kernel turns it into LINEARLY SEPARABLE DATA)
-#           The hyperplane is chosen so that the classes are MAXIMALLY SEPARATED
+#           The hyperplane is chosen so that the classes are MAXIMALLY SEPARATED (maximize margin)
+#           PARAMETERS: usually Radial Basis Functions (RBF), where GAMMA = higher nonlinearity factor (overfitting risk! use validation data) and C = 1/regularization = soft margin SVM
 #           SUPPORT VECTORS: datapoints closes to the separation hyperplane, only these are used in the learning process
 #               y = (w^T)*x + b where y >=1 represents one class and y<=-1 represents the other, equalities are for closest support vectors
 #           AVANTAGES: well in high dimensions, only use a subset of the data (support vectors)
@@ -141,12 +142,15 @@
 
 # Artificial Intelligence > Machine Learning (statistical branch) > Deep Learning
 
-sklearn.preprocessing.StandardScaler().fit(X).transform(X) # or StandardScaler().fit_transform(X)
+sklearn.preprocessing.StandardScaler().fit(X).transform(X); StandardScaler().fit_transform(training_features) .transform(test_features)
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size = 0.3)
 sklearn.preprocessing.LabelEncoder.fit(['group 1', 'group 2', 'group 3']).transform(X)
 sklearn.preprocessing.normalize(X, axis=1, norm='l1', copy=False) #axis=1 means that each ROW will be normalized as a vector
 sklearn.datasets.load_iris().data .target; # data format [each sample [features], [next sample's features] ...]
+sklearn.datasets.load_digits().target .images.reshape( (len(images), -1) ) # flattened handwritten digits
 coordinates, which_cluster_they_belong = sklearn.datasets.make_blobs(n_samples="how many points", centers=["center positions [1,2] [-1,2]"], cluster_std="size of each cluster")
+plt.boxplot([sklearn.model_selection.cross_val_score(model, dataset_x, dataset_y, cv=sklearn.model_selection.KFold(n_splits=10), scoring='accuracy') for model in models]); plt.show() # Test different models and choose the best!
+
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
 dataframe.head(); dataframe[dataframe['color'] == 'red'][0:5]; dataframe.name_of_the_column; dataframe[dataframe.columns].values[0:5]
@@ -195,15 +199,16 @@ snapml.DecisionTreeClassifier(max_depth=4, n_jobs=4).fit(x_train, y_train, sampl
 snapml.SupportVectorMachine(class_weight='balanced', random_state=25, n_jobs=4, fit_intercept=False).fit(x_train, y_train) # CPU n_jobs=4 vs GPU use_gpu=True
 snapml.DecisionTreeRegressor(max_depth=8, random_state=45, n_jobs=4).fit(x_train, y_train).predict(x_test) # CPU n_jobs=4 vs GPU use_gpu=True
 
-sklearn.linear_model.LogisticRegression(C=0.01, solver='liblinear').fit(x_train,y_train) # C parameter = 1/regularization strength
+sklearn.linear_model.LogisticRegression(C=0.01, solver='liblinear', multi_class='ovr').fit(x_train,y_train) # C parameter = 1/regularization strength
+sklearn.linear_model.LogisticRegression(C=0.01, solver='saga',      multi_class='multinomial', penalty='l1', tol=0.1, ) # multi_class=ovr (binary with all-vs-rest) multinomial=multiclass regression
 logistic_regression.predict(x_test); logistic_regression.predict_proba(x_test); label=np.argmax(predicted_probabilities,axis=1) # predict returns label (either 0 or 1) whereas predict_proba returns [probability for 0, probability for 1]
-sklearn.metrics.accuracy_score(y_test, predictions)
+logistic_regression.score(x_test, y_test); sklearn.metrics.accuracy_score(y_test, predictions) # equivalent
 sklearn.metrics.jaccard_score(y_test, predictions, pos_label=0) # jaccard index = size intersection/size union
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=[1,0]); sklearn.metrics.classification_report(y_test, predictions)
 # precission=how reliable is it that the prediction is correct; recall=how many of the actual labels is it detecting; F1 score=harmonic average of precission and recall
 sklearn.metrics.log_loss(y_test, prediction_probabilities)
 
-sklearn.svm.SVC(kernel='rbf', gamma=0.001, C=100.) .fit(x_train, y_train) .predict(x_test) # Linear, Polynomial, Radial basis function (RBF), Sigmoid
+sklearn.svm.SVC(kernel='rbf', gamma=0.001, C=100.) .fit(x_train, y_train) .predict(x_test); sklearn.svm.SVC(kernel='rbf', C=1., gamma='scale') # Linear, Polynomial, Radial basis function (RBF), Sigmoid
 sklearn.svm.SVC(probability=True) .fit(x_train, y_train) .predict_proba(x_test)
 sklearn.svm.SVC(decision_function_shape='ovo') .fit(x_train, y_train) .decision_function(x_test) # For multiple classes: ovo=one.vs.one ovr=one.vs.rest BUT internally always uses ONE vs ONE strategy
 sklearn.metrics.confusion_matrix(y_test, predictions, labels=["labelname","otherlabel"])
