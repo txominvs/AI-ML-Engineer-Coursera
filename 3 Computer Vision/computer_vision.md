@@ -33,6 +33,22 @@
 - One-vs-one (good for Support Vector Machines SVM)
 # Multi-label: checkboxes
 
+# Feature extraction: HOG = Histogram of Oriented Gradients
+1. Turn the image into GRAYSCALE
+2. Divide image into patches (also called *cells*)
+3. For each patch
+    - For each pixel inside the patch:
+        1. Compute the grayscale gradient at that point using Sobel
+        2. Compute the angle where the gradient points to = atan(gradient_x, gradient_y)
+    - Make a histogram of: how many gradients' angle is 0º-10º, how many between 10º-20º, ..., how many 350º-360º
+4. To improve imbalance to highlights and shadows in the image, cells are block normalized
+5. Feed data (features!) into Support Vector Machine
+
+Other feature extraction methods: SURF and SIFT
+
+# Image detection scheme
+Feature extraction > Nonlinear Kernel > Linear classifier
+
 # Your IBM Cloud Feature Code:
 
 
