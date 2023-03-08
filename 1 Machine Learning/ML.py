@@ -150,6 +150,8 @@ sklearn.datasets.load_iris().data .target; # data format [each sample [features]
 sklearn.datasets.load_digits().target .images.reshape( (len(images), -1) ) # flattened handwritten digits
 coordinates, which_cluster_they_belong = sklearn.datasets.make_blobs(n_samples="how many points", centers=["center positions [1,2] [-1,2]"], cluster_std="size of each cluster")
 plt.boxplot([sklearn.model_selection.cross_val_score(model, dataset_x, dataset_y, cv=sklearn.model_selection.KFold(n_splits=10), scoring='accuracy') for model in models]); plt.show() # Test different models and choose the best!
+# Test multiple model parameters at once
+models = sklearn.model_selection.GridSearchCV(estimator=sklearn.svm.SVC(gamma='scale'), cv=5, param_grid={'kernel': ('linear', 'rbf'), 'C': [1, 10, 100] }); models.fit(x_train, y_train); best_parameters = svm.best_params_; y_pred = svm.predict(x_test); sklearn.metrics.accuracy_score(y_test, y_pred)
 
 
 dataframe = pandas.read_csv("file_name.csv", delimiter=","); dataframe.shape; dataframe.describe(); dataframe.dtypes; dataframe["categorical_column_name"].value_counts();
@@ -190,7 +192,8 @@ probabs = sklearn.svm.LinearSVC(class_weight='balanced', loss="hinge", fit_inter
 sklearn.metrics.roc_auc_score(y_test, probabs)
 sklearn.metrics.hinge_loss(y_test, probabs)
 
-pickle.dumps(model)
+import pickle; save_file = pickle.dumps(model); model = pickle.loads(save_file)
+from sklearn.externals import joblib; joblib.dump(model, 'file_name.joblib'); model = joblib.load('file_name.joblib')
 
 sklearn.tree.DecisionTreeRegressor(criterion = "mse", max_depth=8) .fit(x_train, y_train) .predict(x_test) # max_depth, min_samples_split, min_samples_leaf, max_features
 regression_tree.score(x_test, y_test); regression_tree.predict(x_test) # R^2 value

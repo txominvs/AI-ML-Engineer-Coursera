@@ -93,3 +93,17 @@ _unused, predictions, neighbor_labels, neighbor_distances = knn.findNearest(test
 sklearn.metrics.confusion_matrix(test_labels, predictions, labels=[0, 1])
 correct_accuracy = np.count_nonzero(test_labels == predictions) / len(test_labels)
 knn.save('knn_samples.yml')
+
+
+# Histogram of Orientated Gradients = HOG
+for image in images:
+    image = cv2.resize(image, (64, 64))
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    hog_features, hog_visualization = hog(gray_image,
+                            visualize=True,
+                            block_norm='L2-Hys',
+                            pixels_per_cell=(16, 16))
+    plt.imshow(hog_visualization, cmap=plt.cm.gray)
+    x_train.append(hog_features)
+    y_train.append(label_of_image)
+sklearn.svm.SVC(gamma='scale',C=10,kernel='rbf').fit(x_train, y_train)
