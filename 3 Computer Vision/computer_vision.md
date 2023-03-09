@@ -47,12 +47,27 @@
 Other feature extraction methods: SURF and SIFT
 
 # Image detection scheme
-Feature extraction > Nonlinear Kernel > Linear classifier
+Feature extraction > SVM Nonlinear Kernel > Linear classifier
+
+# Neural Network: free forward neural network = fully connected neural network
+a bunch of "box functions" or "bump functions"
+## Hiperplanes + logistic activation
+1. Use 1 hyperplane to classify <-1 to 0 and >=-1 to 1
+    activation function = 1/(1+e^(x-1))
+2. Use another hyperplane to classify <1 to 1 and >=1 to 0
+    activation function = 1/(1+e^(-1-x))
+3. Apply weights +1 and -1
+    activation function = threshold >=0.5
+    this is another hyperplane classification
+
+we have exactly recovered bump function = THRESHOLD[ 1/(1+e^(x-1)) - 1/(1+e^(-1-x)) ]
+## Multi-class (ouput can be either cat, dog or duck): softmax
+## Multi-label (non-mutually-exclusive labels like cat, pretty and red): binary sigmoid for each output
+## Vanishing gradient problem:
+Sigmoid activation function small gradient: backpropagating gradient results in vanishingly small numbers
+ReLU activation function = max(0, x) solves this isssue by having a big gradient
 
 # Your IBM Cloud Feature Code:
-
-
-
 Copy the feature code below or click Activate Your Trial to get started with IBM Cloud.
 
 7393dd6b95ad645fe65de1deac125fdc
