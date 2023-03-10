@@ -89,3 +89,12 @@ slow and too simple
 
 # Feature Extraction
 # Linear Classifier
+
+# Convolutional Neural Networks (CNN)
+Input > [Convolution > ReLU > Max Pooling >] Flatten [Linear Layer > ReLU] Linear Layer > Softmax
+- Receptive Field: which region has affected the current pixel after the convolution?
+- Max pooling: rescaling preserving features, invariant to small changes, increase receptive field
+
+Image size after layer = floor( 1 + [size + 2*padding - dilation*(kernel size - 1) - 1] / stride )
+- CNN layer: stride 1 padding 0 dilation 1
+- Max pooling: stride=kernel size padding 0 dilation 1
