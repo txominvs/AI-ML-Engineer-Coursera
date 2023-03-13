@@ -98,3 +98,24 @@ Input > [Convolution > ReLU > Max Pooling >] Flatten [Linear Layer > ReLU] Linea
 Image size after layer = floor( 1 + [size + 2*padding - dilation*(kernel size - 1) - 1] / stride )
 - CNN layer: stride 1 padding 0 dilation 1
 - Max pooling: stride=kernel size padding 0 dilation 1
+
+## LeNet-5
+Works for MINST dataset of handwritten digits
+ImageNet classification dataset
+- Grayscale image 32 x 32 x 1
+- Repeat twice
+    - Kernel 5x5 with stride=1
+    - Max pooling 14 x 14
+- 120 features for classificatioen
+## AlexNet
+- Kernel 11x11
+## VGGNet
+Very deep. Variants VGG16 layers and VGG19 layers
+- 3x3 kernels twice, same receptive field less parameters
+## ResNet
+Vanishing gradient problem for deep networks. Deep residual learning has residual layers or skip layers perflow like layer:
+layer output = layer input + weighted neuron
+
+# Transfer Learning
+Use previously trained CNNs aka. **pretrained models** as a feature generator.
+Then change the last classification layers by our own softmax layers or even a Support Vector Machine.
