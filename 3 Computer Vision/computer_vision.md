@@ -119,3 +119,32 @@ layer output = layer input + weighted neuron
 # Transfer Learning
 Use previously trained CNNs aka. **pretrained models** as a feature generator.
 Then change the last classification layers by our own softmax layers or even a Support Vector Machine.
+
+# Image classification
+Assign a label
+# Classification + localization
+Detect presence and indicate location with bounding box
+# Image detection
+Locate multiple object with bounding box and classes
+## Sliding window detection method
+1. Split an image into rectangular slices
+2. Apply image classification to each slice: object / background
+Problems: overlapping boxes single object, overlaping objects single box, object size, object shape
+## Bounding box detection method
+1. Choose all possible (x0, y0) and (x3,y3) coordinates to create a rectangle inside the image
+2. Apply classification to all these rectangles and pick the best rectangle/coordiantes
+## Bounding box pipeline method
+1. Train a model with detected class + bounding box
+2. Use this model to detect the classes and bounding boxes
+## Score
+Confidence the detector has on the predicted class and bounding box
+
+# Haar Cascade classifier
+Haar-feature-based Cascade-classifiers:
+- Haar wavelets convolutional kernels extract information about: edges, lines, diagonal-lines
+- Cascade: a region is put through a classifier, if it succeeds, it goes to the next classifier. If not, it is completely discarded.
+The training method:
+1. Calculating Integral Image: in order to carry out efficient convolution. Pixel value = sum of all pixel values up and left
+2. Calculating Haar like features = integral[ IMAGE(SIZE-x) KERNEL(x) ] = SUM[ Integral Image * KERNEL ]
+3. AdaBoost Learning Algorithm: sequence of predictors, next predictor tries to fix mistakes by previous
+4. Cascade Filter: chain of binary classifiers. If a classifier gives NEGATIVE detection, it is discarded right away
