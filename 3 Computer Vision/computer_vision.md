@@ -101,7 +101,7 @@ Image size after layer = floor( 1 + [size + 2*padding - dilation*(kernel size - 
 
 ## LeNet-5
 Works for MINST dataset of handwritten digits
-ImageNet classification dataset
+ImageNet is a popular classification dataset
 - Grayscale image 32 x 32 x 1
 - Repeat twice
     - Kernel 5x5 with stride=1
@@ -148,3 +148,21 @@ The training method:
 2. Calculating Haar like features = integral[ IMAGE(SIZE-x) KERNEL(x) ] = SUM[ Integral Image * KERNEL ]
 3. AdaBoost Learning Algorithm: sequence of predictors, next predictor tries to fix mistakes by previous
 4. Cascade Filter: chain of binary classifiers. If a classifier gives NEGATIVE detection, it is discarded right away
+
+# Convolutional Neural Network-based object detection
+Sliding window approach
+- Popular CNN Architectures pre-trained on ImageNet database
+    1. Convolutional
+    2. Pooling
+    3. Convolutional
+    4. Pooling
+- Last layers: softmax classification + 4 floats for bounding box coordinates
+- Cost function (Multitask Loss, weighted sum) = cross-entropy (softmax loss) + L2 loss for bounding box coordinates (sum error**2)
+
+# Faster image detection techniques
+- Region-based object detection breaks up the image into regions: Region-Based Convolutional Neural Network (R-CNN)
+    - Accurate but slower
+    - R-CNN, fast RCNN (Girshick, Ross. "Fast R-CNN.") and Faster RCNN (Ren, Shaoqing, et al. "Faster R-CNN")
+- Single-Stage uses the entire image
+    - Faster but less accurate
+    - Single Shot Detection (SSD) and You Only Look Once (YOLO)
