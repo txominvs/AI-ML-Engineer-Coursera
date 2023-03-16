@@ -8,10 +8,14 @@ torch.manual_seed(0)
 
 # Compare the prediction and actual value:
 def result(model,x,y):
-    single_sample_batch = torch.unsqueeze(x, 0)
-    z=model(single_sample_batch)
-    _,yhat=torch.max(z.data, 1)
-    assert yhat.item() == y
+    from PIL import Image
+    with Image.open(imageName) as image:
+        transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
+        transformed_image = transform(image)
+        single_sample_batch = torch.unsqueeze(transformed_image, 0)
+        z=model(single_sample_batch)
+        _,yhat=torch.max(z.data, 1)
+    return yhat.item() == y
 
 # Define our device as the first visible cuda device if we have CUDA available:
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
