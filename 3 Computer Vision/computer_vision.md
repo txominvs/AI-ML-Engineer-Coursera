@@ -129,9 +129,13 @@ Locate multiple object with bounding box and classes
 ## Sliding window detection method
 1. Split an image into rectangular slices
 2. Apply image classification to each slice: object / background
-Problems: overlapping boxes single object, overlaping objects single box, object size, object shape
+Problems:
+- overlapping boxes single object
+- overlaping objects single box
+- varying object size: aspect ratio
+- varying object shape
 ## Bounding box detection method
-1. Choose all possible (x0, y0) and (x3,y3) coordinates to create a rectangle inside the image
+1. Choose all possible (x1, y1) and (x2, y2) coordinates to create a rectangle inside the image
 2. Apply classification to all these rectangles and pick the best rectangle/coordiantes
 ## Bounding box pipeline method
 1. Train a model with detected class + bounding box
