@@ -1,5 +1,8 @@
 import torch
 
+#
+# 1D tensors
+#
 tensor_1D = torch.tensor([1,2,3,4,5], dtype=torch.int32)
 tensor_1D = torch.FloatTensor([1,2,3,4,5])
 tensor_1D[3]; tensor_1D[2:5] # element access
@@ -28,3 +31,24 @@ elementwise = torch.sin(pytorch_tensor)
 torch.linspace(min_value, max_value, steps=5)
 
 plt.plot(x=pytorch_tensor.numpy(), y=pytorch_tensor.numpy())
+
+
+#
+# 2D tensors
+#
+tensor_2D = torch.tensor([
+    [11, 12, 13],
+    [21, 22, 23],
+    [31, 32, 33]
+])
+tensor_2D.ndimension() # = rank = 2
+tensor_2D.shape == tensor_1D.size() # (number of rows, number of columns)
+tensor_2D.numel() # how many values in the FLATTENED array
+tensor_2D[row_index, column_index] == tensor_2D[row_index][column_index] # equivalent
+tensor_2D[3:5 rows, 1:3 columns]
+linear_combination = 2*tensor_2D - 3.14*tensor_2D
+elementwise_multiplication = tensor_2D * tensor_2D
+matrix_multiplication = rows_of_A * columns_of_B = torch.mm(tensor_with_X_cols, tensor_with_X_rows)
+
+numpy_tensor = pytorch_tensor.numpy(); pytorch_tensor = torch.from_numpy(numpy_tensor)
+pandas_tensor = pandas.DataFrame({'a':[11,21,31],'b':[12,22,312]}); pytorch_tensor = torch.from_numpy(pandas_tensor.values)
