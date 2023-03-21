@@ -64,16 +64,16 @@ result_of_operations = function
 function.backward()
 partial_derivative_wrt_x = x.grad
 partial_derivative_wrt_v = y.grad
-print('data:',x.data)
-print('grad_fn:',x.grad_fn)
-print('grad:',x.grad)
-print("is_leaf:",x.is_leaf)
-print("requires_grad:",x.requires_grad)
-print('data:',function.data)
-print('grad_fn:',function.grad_fn)
-print('grad:',function.grad)
-print("is_leaf:",function.is_leaf)
-print("requires_grad:",function.requires_grad)
+print('data:',x.data) # where to evaluate
+print('grad_fn:',x.grad_fn) # NONE
+print('grad:',x.grad) # partial derivative wrt X
+print("is_leaf:",x.is_leaf) # yes, because X is a the top of the backwards propagation
+print("requires_grad:",x.requires_grad) # yes
+print('data:',function.data) # result of math operations
+print('grad_fn:',function.grad_fn) # gradient of the last executed operation, first in the backwards propagation chain
+print('grad:',function.grad) # NONE
+print("is_leaf:",function.is_leaf) # nope, actually this is the base trunk of the backwards propagation
+print("requires_grad:",function.requires_grad) # yes, inhertied
 
 class Custom_function_gradient(torch.autograd.Function):
 # https://pytorch.org/tutorials/beginner/examples_autograd/two_layer_net_custom_function.html
@@ -111,3 +111,12 @@ y_values = Y.detach().numpy()
 gradient_values = x.grad.detach().numpy()
 plt.plot(x_values, y_values) # function
 plt.plot(x_values, gradient_values) # derivative
+
+
+#
+# Dataset
+#
+from torch.utils.data import Dataset
+
+class Custom_dataset(Dataset):
+    
