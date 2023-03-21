@@ -52,3 +52,62 @@ matrix_multiplication = rows_of_A * columns_of_B = torch.mm(tensor_with_X_cols, 
 
 numpy_tensor = pytorch_tensor.numpy(); pytorch_tensor = torch.from_numpy(numpy_tensor)
 pandas_tensor = pandas.DataFrame({'a':[11,21,31],'b':[12,22,312]}); pytorch_tensor = torch.from_numpy(pandas_tensor.values)
+
+
+#
+# Derivatives
+#
+x = torch.tensor(1.0, requires_grad=True)
+y = torch.tensor(2.0, requires_grad=True)
+function = x * y + x ** 2
+result_of_operations = function
+function.backward()
+partial_derivative_wrt_x = x.grad
+partial_derivative_wrt_v = y.grad
+print('data:',x.data)
+print('grad_fn:',x.grad_fn)
+print('grad:',x.grad)
+print("is_leaf:",x.is_leaf)
+print("requires_grad:",x.requires_grad)
+print('data:',function.data)
+print('grad_fn:',function.grad_fn)
+print('grad:',function.grad)
+print("is_leaf:",function.is_leaf)
+print("requires_grad:",function.requires_grad)
+
+class Custom_function_gradient(torch.autograd.Function):
+# https://pytorch.org/tutorials/beginner/examples_autograd/two_layer_net_custom_function.html
+    @staticmethod
+    def forward(ctx, input):
+        ctx.save_for_backward(input)
+        return input**3 + 2*input # what is the result of the operation = forward pass
+    @staticmethod
+    def backward(ctx, grad_output):
+        input, = ctx.saved_tensors
+        return grad_output * ( 3*input**2 + 2 ) # what is the result of the derivative = backward pass
+x = torch.tensor(3.0, requires_grad=True)
+operation = Custom_function_gradient.apply
+function = operation(x)
+function.backward()
+operations_result = function
+derivative_wrt_x = x.grad
+last_derivative = function.grad_fn
+
+# Calculate the derivative with respect to a function with multiple values as follows.
+# You use the sum trick to produce a scalar valued function and then take the gradient: 
+# Calculate the derivative with multiple values
+x = torch.linspace(-10, 10, 20, requires_grad=True)
+Y = torch.relu(x) ** 2 # Take the derivative of Relu Squared with respect to multiple values.
+# We need to explicitly pass a "gradient" argument in Q.backward() because it is a vector.
+# "gradient" is a tensor of the same shape as Q, and it represents
+# the gradient of Q w.r.t. itself, i.e. dQ/dQ = 1
+# https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
+external_grad = torch.tensor([1., 1.]); Q.backward(gradient=external_grad)
+# Equivalently, we can also aggregate Q into a scalar and call backward implicitly, like Q.sum().backward().
+y = torch.sum(Y) # y = Y.sum()
+y.backward()
+x_values = x.detach().numpy()
+y_values = Y.detach().numpy()
+gradient_values = x.grad.detach().numpy()
+plt.plot(x_values, y_values) # function
+plt.plot(x_values, gradient_values) # derivative
