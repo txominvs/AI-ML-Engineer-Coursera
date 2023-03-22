@@ -169,7 +169,7 @@ class Dataset(Dataset):
         return image, label
 import torchvision.transforms as transforms
 transformations = transforms.Compose([
-    transforms.CenterCrop(20),
+    transforms.CenterCrop(20), # crop a 20x20 square in the middle
     transforms.RandomVerticalFlip(p=1),
     transforms.RandomHorizontalFlip(p=1)
     transforms.ToTensor()
@@ -185,4 +185,5 @@ dataset = dsets.MNIST(
     train = False, # download training set or test set?
     download = True,
     transform = transformations,
-)
+) # = images shape 1x28x28 , labels
+
