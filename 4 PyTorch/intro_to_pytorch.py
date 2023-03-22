@@ -119,4 +119,70 @@ plt.plot(x_values, gradient_values) # derivative
 from torch.utils.data import Dataset
 
 class Custom_dataset(Dataset):
-    
+    def __init__(self, length=100, transform=None):
+        self.len = length
+        self.x = 2 * torch.ones(length, 2)
+        self.y = torch.ones(length, 1)
+        self.transform = transform
+    def __getitem__(self, index): # overrides Custom_dataset()[index]
+        sample = self.x[index], self.y[index]
+        if self.transform:
+            sample = self.transform(sample)
+        return sample
+    def __len__(self): # overrides len( Custom_dataset() )
+        return self.len
+
+class Custom_transformation():
+    def __init__(self, add_smth=0): # setup
+        self.add_smth = add_smth
+        pass
+    def __call__(self, sample): # perform transformation
+        x, y = sample
+        x = x + self.add_smth
+        return x, y
+
+dataset = Custom_dataset(
+    length=10,
+    transform=Custom_transformation(add_smth=123),
+)
+
+from torchvision import transforms
+composed_transformation = transforms.Compose([
+    Custom_transformation(add_smth=123),
+    Custom_transformation(add_smth=-1),
+])
+
+#
+# On-demand datasets
+#
+class Dataset(Dataset):
+    def __init__(self, database_location):
+        self.data_base = pandas.read_csv(database_location)
+        self.len = self.data_base.shape[0] 
+    def __len__(self):
+        return self.len
+    def __getitem__(self, index):
+        img_location = os.path.join(base_url, self.data_base.iloc[index, 1])
+        image = Image.open(img_location)
+        image = self.transform(image)
+        label = self.data_base.iloc[idx, 0]
+        return image, label
+import torchvision.transforms as transforms
+transformations = transforms.Compose([
+    transforms.CenterCrop(20),
+    transforms.RandomVerticalFlip(p=1),
+    transforms.RandomHorizontalFlip(p=1)
+    transforms.ToTensor()
+])
+dataset = Dataset(
+    database_location="something.csv",
+    transform = transformations,
+)
+
+import torchvision.datasets as dsets
+dataset = dsets.MNIST(
+    root='./data',
+    train = False, # download training set or test set?
+    download = True,
+    transform = transformations,
+)
