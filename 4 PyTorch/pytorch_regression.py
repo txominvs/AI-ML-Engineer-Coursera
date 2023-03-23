@@ -1,4 +1,16 @@
-# Regression: target = bias + weight * predictor
+# Linear regression: target = bias + weight * predictor
+# Assumption: additive Gaussian noise with MEAN=0 STD=SIGMA
+# Loss(parameter space) = (datapoint - prediction)^2
+# Cost = MEAN SQUARE ERROR = AVERAGE[ Loss ] for all datapoints
+
+# Newton method (finds zero):       x -> x - f(x) / (df/dx)
+# Gradient descent  = find minimum = find zero derivative
+#                   = apply newthon method to d[loss]/dw
+#                   = w - loss'(w) / loss''(w) where GAMMA = 1/loss''(w) = LEARNING RATE
+# Learning rate too LARGE = overshoot, too SMALL = local minima
+# Batch = all samples in the training set
+# Batch gradient descent: calculate loss with all samples -> then, update weights
+
 import torch
 
 #
