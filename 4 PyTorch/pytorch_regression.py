@@ -10,18 +10,35 @@
 # Learning rate too LARGE = overshoot, too SMALL = local minima
 # Batch = all samples in the training set
 # Batch gradient descent: calculate loss with all samples -> then, update weights
+# Iteration = when are weights updated
+# Epoch = all samples have gone through training
 
 import torch
 
 #
 # Hand-made model
 #
+x = torch.linspace(0, 2, steps=10).view(-1, 1) # [[0], [1], [2], ...]
+y = -3*x + 5 + 0.1*torch.randn( x.size() ) # w=-3 and b=5
 w = torch.tensor(2.0, requires_grad = True)
 b = torch.tensor(-1.0, requires_grad = True)
-def forward(x):
+def forward(x): # evaluate model
     return b + w*x
-x = torch.tensor([[1.0], [2.0]]) # batch_size = 2
-yhat = forward(x)
+def criterion(yhat, y): # calculate loss
+    return torch.mean((yhat-y)**2)
+learning_rate = 0.2
+loss_per_epoch = []
+for epoch in range(50):
+    yhat = forward(x)
+    loss = criterion(yhat, y)
+    loss.backward()
+    w.data = w.data - learning_rate*w.grad.data
+    w.grad.data.zero_()
+    b.data = b.data - learning_rate*b.grad.data
+    b.grad.data.zero_()
+    loss_per_epoch.append( loss.item() )
+print(w, b)
+print(loss_per_epoch)
 
 #
 # Functional approach
