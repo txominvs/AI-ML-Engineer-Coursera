@@ -152,6 +152,12 @@ composed_transformation = transforms.Compose([
     Custom_transformation(add_smth=-1),
 ])
 
+from torch.utils.data import Dataloader
+train_loader = Dataloader(dataset=dataset, batch_size=5)
+for epoch in range(100):
+    for batch_x, batch_y in train_loader:
+        ...
+
 #
 # On-demand datasets
 #
