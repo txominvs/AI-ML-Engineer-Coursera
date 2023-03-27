@@ -33,10 +33,10 @@ def criterion(yhat, y): # calculate loss
     return torch.mean((yhat-y)**2)
 learning_rate = 0.2
 loss_per_epoch = []
-for epoch in range(50):
+for epoch in range(50): # epochs
     loss_for_epoch = 0
     train_loader = zip(x, y)
-    for iteration_x, iteration_y in train_loader:
+    for iteration_x, iteration_y in train_loader: # mini-batch per iteration
         yhat = forward(iteration_x)
         loss = criterion(yhat, iteration_y)
         loss.backward()
