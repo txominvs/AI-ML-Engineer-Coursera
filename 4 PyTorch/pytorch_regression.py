@@ -18,6 +18,10 @@
 # Epoch = all samples have gone through training
 # iterations = training size/batch size * epochs
 
+# training data: fit model parameters (slope, bias)
+# validation data: optimize HYPER-parameters (learning rate, batch size) -> choose best model on validation set
+# test data: how does it perform on the real world?
+
 import torch
 
 #
@@ -49,7 +53,8 @@ for epoch in range(50): # epochs
 print(w, b)
 print(loss_per_epoch)
 
-class Custom_dataset(torch.utils.data.Dataset):
+from torch.utils.data import Dataset
+class Custom_dataset(Dataset):
     def __init__(self):
         self.x, self.y, self.len = ...
     def __getitem__(self,index):    
@@ -72,6 +77,9 @@ yhat = linear_layer(x)
 # Object-oriented approach
 #
 from torch import nn
+from torch import optim
+from torch.utils.data import DataLoader
+
 class Custom_Linear_Regression(nn.Module):
     def __init__(self, in_features, out_features):
         super().__init__()
@@ -81,5 +89,32 @@ class Custom_Linear_Regression(nn.Module):
         return out
 linear_model = Custom_Linear_Regression(in_features=1, out_features=1)
 parameters = list(linear_model.parameters()); parameters = linear_model.state_dict()
-x = torch.tensor([[1.0], [2.0]]) # batch_size = 2
-yhat = linear_model(x)
+linear_model.state_dict()['linear.weight'][0] = 123.; for param in linear_model.parameters(): param[0] = 123. # changing parameters
+x = torch.tensor([[1.0], [2.0]]); yhat = linear_model(x) # batch_size = 2
+
+learning_rates = [1, 0.1, 0.01, 0.001, 0.0001]
+models, training_costs, validation_costs = [], [], []
+for learning_rate in learning_rates:
+
+    linear_model = Custom_Linear_Regression(in_features=1, out_features=1)
+    criterion = nn.MSELoss()
+    optimizer = optim.SGD(linear_model.parameters(), lr=learning_rate)
+    trainloader = DataLoader(dataset=Custom_dataset(), batch_size=5)
+
+    for epoch in range(10): # epochs
+        for x,y in trainloader: # mini-batch
+            yhat = linear_model(x)
+            loss = criterion(yhat, y)
+            optimizer.zero_grad() # set gradients to zero
+            loss.backward() # compute gradients
+            optimizer.step() # w.data = w.data - learning_rate*w.grad.data
+
+    yhat = linear_model(x_train_data)
+    train_loss = criterion(yhat, y_train_data)
+    training_costs.append( train_loss.item() )
+
+    yhat = linear_model(x_val_data)
+    train_loss = criterion(yhat, y_val_data)
+    training_costs.append( train_loss.item() )
+
+    models.append(linear_model)
