@@ -32,3 +32,17 @@ class linear_regression(nn.Module):
         return self.linear(x)
 yhat = model(x)
 parameters = list(model.parameters()); parameters = model.state_dict()
+
+optimizer = optim.SGD(model.parameters(), lr=0.1)
+criterion = nn.MSELoss()
+train_loader = DataLoader(dataset=data_set, batch_size=2)
+for epoch in range(100):
+    for x,y in train_loader:
+        yhat = model(x)
+        loss = criterion(yhat, y)
+        loss_per_iteration.append(loss.item())
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+validation_loss = criterion(model(x_valdation), y_validation)
