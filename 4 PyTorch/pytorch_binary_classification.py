@@ -12,7 +12,7 @@ log_loss = log(likelihood) / all_tries = number_of_tails/all_tries*log(x) + numb
 ###
 
 ###
-# BINARY CLASSIFICATION
+# BINARY CLASSIFICATION <=> LOGISTIC REGRESSION
 ###
 z = lambda x: a*x + b 
 # hyperplane: z(x) = 0
