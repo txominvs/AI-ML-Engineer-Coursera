@@ -40,7 +40,7 @@ _, yhat = z.max(axis=1) # for each row, select the maximum column
 ####
 # CRITERION = crossentropy: key of multi-class classification!
 ####
-criterion = nn.CrossEntropyLoss() # automatically applies SOFTMAX!
+criterion = nn.CrossEntropyLoss() # automatically applies SOFTMAX! https://stackoverflow.com/a/57521524/4965360
 
 from torch.utils.data import Dataset, DataLoader
 class Data(Dataset):
@@ -65,7 +65,7 @@ for epoch in range(300):
     for x, y in train_loader:
         optimizer.zero_grad()
         yhat = model(x.view(-1, 28 * 28))
-        loss = criterion(yhat, y) # automatically applies SOFTMAX!
+        loss = criterion(yhat, y) # automatically applies SOFTMAX! https://stackoverflow.com/a/57521524/4965360
         loss.backward()
         optimizer.step()
 
@@ -78,4 +78,4 @@ for epoch in range(300):
         softmax_function = nn.Softmax(dim=-1)
         probabilities_for_each_class = softmax_function(z)
 
-        confidence_of_guess, guessed_labels = torch.max(probabilities_for_each_class, axis=1).item()
+        confidence_of_guess, guessed_labels = torch.max(probabilities_for_each_class, dim=1).item()
