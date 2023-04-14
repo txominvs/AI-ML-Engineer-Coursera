@@ -41,7 +41,6 @@ criterion = nn.BCELoss() # used for BINARY classification = class 0 or class 1
 optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
 
 # Train
-cost = []
 for epoch in range(100):
     loss_per_epoch = 0
     for x, y in zip(X, Y):
