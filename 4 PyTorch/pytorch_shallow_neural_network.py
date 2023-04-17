@@ -31,6 +31,7 @@ model = nn.Sequential(
 )
 yhat = model(x)
 
+
 def custom_BCE_loss(outputs, labels):
     return torch.mean(labels * torch.log(outputs) + (1 - labels) * torch.log(1 - outputs))
 criterion = custom_BCE_loss
@@ -38,18 +39,38 @@ criterion = custom_BCE_loss
 criterion = nn.BCELoss() # used for BINARY classification = class 0 or class 1
 # For REGRESSIONS use the following: criterion = nn.MSELoss()
 
+
 optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+# or
+optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
+
+
+from torch.utils.data import Dataset, DataLoader
+class Custom_dataset(Dataset):
+    def __init__(self):
+        self.x, self.y, self.len = ...
+    def __getitem__(self,index):    
+        return self.x[index], self.y[index]
+    def __len__(self):
+        return self.len
+train_loader = DataLoader(dataset=Custom_dataset(), batch_size=100)
+
 
 # Train
 for epoch in range(100):
     loss_per_epoch = 0
-    for x, y in zip(X, Y):
+    for x, y in train_loader:
         yhat = model(x)
         loss = criterion(yhat, y)
+        optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        optimizer.zero_grad()
 
         predicted_label = yhat >= 0.5
 
-        loss_per_epoch += loss.item() 
+        loss_per_epoch += loss.item()
+
+# Overfitting = too many neurons, model complexity bigger than data complexity
+# Underfitting = too few neurons, data complexity bigger than model complexity
+def accuracy(model, data_set):
+    return np.mean(data_set.y.view(-1).numpy() == (model(data_set.x)[:, 0] > 0.5).numpy())
