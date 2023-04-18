@@ -61,3 +61,63 @@ for epoch in range(10):
         _, label = torch.max(z, 1)
         correct += (label == y).sum().item()
     accuracy_per_epoch = 100 * (correct / len(validation_dataset))
+
+###
+# Dropout
+###
+# After the activation function, randomly set to zero the output of each neuron of a layer
+# When the model is very complex --> overfitting is likely
+# Dropout prevents overfitting by shutting of neurons in a layer (randomly) --> reducing model complexity
+# P = probability of shutting down a neuron
+# 1/(1-P) = given that on average only 1-P neurons are active
+#           the magnitude of the output of a layer is smaller
+#           compared to not having DROPOUT. That is why the 
+#           output has to be rescaled to be bigger by this factor
+
+
+# Create Net Class
+
+class Net(nn.Module):
+    def __init__(self, *layer_sizes, dropout_probability):
+        super(Net, self).__init__()
+        self.drop = nn.Dropout(p=dropout_probability)
+        self.linear_1, self.linear_2, self.linear_3 = ...
+    def forward(self, x):
+        x = torch.relu(self.linear_1(x))
+        x = self.drop(x)
+        x = torch.relu(self.linear_2(x))
+        x = self.drop(x)
+        x = self.linear_3(x) # no dropout nor activation for in the last layer
+        return x
+# or equivalently
+model = nn.Sequential(
+    nn.Linear(...),
+    nn.ReLU(),
+    nn.Dropout(dropout_probability),
+    nn.Linear(...),
+    nn.ReLU(),
+    nn.Dropout(dropout_probability),
+    nn.Linear(...), # no dropout nor activation for the last layer
+)
+
+model.train() # activate DROPOUT layers
+
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01) # better than optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+criterion = torch.nn.CrossEntropyLoss() # or criterion = torch.nn.MSELoss()
+
+for epoch in range(500):
+    yhat = model(x)
+    loss = criterion(yhat, y)
+    training_loss = loss.item()
+
+    model.eval() # no DROPOUT will ocur
+    validation_loss = criterion(model(val_x), val_y).item()
+
+    model.train() # activate DROPOUT layers
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+model.eval() # no DROPOUT will ocur
+_, yhat = torch.max(model(test_x), 1)
+test_accuracy = (yhat == test_y).sum() / len(test_x)
