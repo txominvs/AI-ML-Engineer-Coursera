@@ -121,3 +121,32 @@ for epoch in range(500):
 model.eval() # no DROPOUT will ocur
 _, yhat = torch.max(model(test_x), 1)
 test_accuracy = (yhat == test_y).sum() / len(test_x)
+
+###
+# How to initialize weights
+###
+
+# If all the neurons had the same parameters, they would all give the same
+# output and such, they would all have the same gradient value. Thus the
+# training would be identical for all of them and will end up having the
+# same values after the training --> poor model
+
+# Also, if they are intialized with too small values --> not enough variation
+# If the initialization too large --> activation function vanishes --> vanishing gradient problem
+# A lot of neurons in previous layer --> value too large in current neuron --> vanishing gradient
+
+linear = nn.Linear(input_size, output_size)
+# Default initialization
+# weights = uniform_random(low=-1/sqrt(neurons_in_layer), high=+1/sqrt(neurons_in_layer))
+stdv = 1. / math.sqrt(linear.weight.size(1))
+linear.weight.data.uniform_(-stdv, stdv)
+linear.self.bias.data.uniform_(-stdv, stdv)
+# Manual intialization
+model.state_dict()["linear_layer_name.weight"][0] = .23
+model.state_dict()["linear_layer_name.bias"][0] = -0.44
+# Xavier initialization for TANH activation
+# weights = uniform_random(low=-sqrt(6)/sqrt(neurons_in_layer + neurons_next_layer), high=+1/sqrt(neurons_in_layer + neurons_next_layer))
+torch.nn.init.xavier_uniform_(linear.weight)
+torch.nn.init.zeros_(linear.bias)
+# He initialization for ReLU activation
+torch.nn.init.kaiming_uniform_(linear.weight, nonlinearity="relu")
