@@ -193,3 +193,51 @@ for n in range(100):
     optimized_x_values.append(x_value)
     optimized_y_values.append(y_value)
 plt.scatter(optimized_x_values, optimized_y_values)
+
+###
+# BATCH NORMALIZATION (a special layer)
+###
+# 1. Feed a whole batch to train the Network
+# 2. For each neuron scalar output in a layer:
+#       A) Normalize for the whole batch (re-center and re-scaled): Z = (neuron-mean)/standard_deviation
+#       B) Apply affine transformation: Y = Z*gamma_neuron +beta_neuron
+
+# Define the Neural Network Model using Batch Normalization
+
+class NetBatchNorm(nn.Module):
+    def __init__(self, in_size, n_hidden):
+        super().__init__()
+        self.linear_1 = nn.Linear(in_size, n_hidden)
+        self.bn_1 = nn.BatchNorm1d(n_hidden)
+        ...
+    def forward(self, x):
+        x = self.bn_1(torch.sigmoid(self.linear_1(x)))
+        ...
+model = NetBatchNorm(28*28, 10, ...)
+
+# mean and variances will be computed from the training batches
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=2000, shuffle=True)
+# the validation batches will NOT play a role in mean and variances
+validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=5000, shuffle=False)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr = 0.1)
+for epoch in range(10):
+    for x, y in train_loader:
+        model.train() # activate BATCH NORMALIZATION layers for recording means & variances
+        z = model(x.view(-1, 28 * 28))
+        loss = criterion(z, y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        loss_per_epoch = loss.item()
+        
+    correct = 0
+    for x, y in validation_loader:
+        model.eval() # freeze BATCH NORMALIZATION layers so that they use the trained parameters
+        yhat = model(x.view(-1, 28 * 28))
+        _, label = torch.max(yhat, 1)
+        correct += (label == y).sum().item()
+    accuracy = 100 * (correct / len(validation_dataset))
+
+model.eval() # do NOT FORGET to freeze the layers in the end!
