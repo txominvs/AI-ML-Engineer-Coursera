@@ -150,3 +150,45 @@ torch.nn.init.xavier_uniform_(linear.weight)
 torch.nn.init.zeros_(linear.bias)
 # He initialization for ReLU activation
 torch.nn.init.kaiming_uniform_(linear.weight, nonlinearity="relu")
+
+###
+# MOMENTUM TERM in gradient descent
+###
+
+# new velocity = d[loss]/d[weights] + momentum * old velocity
+# new weights = old weights - learning rate *  new velocity
+
+# Momentum helps avoid: saddle points, local minima and vanishing gradients
+
+###
+# Example: FIND THE MINIMUM OF A POLYNOMIAL USING **PYTORCH**
+###
+class Fourth_order_polynomial(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear = nn.Linear(1, 1, bias=False) # the weight will act as the X value to be optimized
+    def forward(self):
+        x = self.linear(torch.tensor([[1.0]]))
+        yhat = 2*(x**4) -9*(x**3) -21*(x**2) + 88*x + 48
+        return yhat
+polynomial_model = Fourth_order_polynomial()
+# Draw the polynomial
+x_values = torch.arange(-4., 6., 0.1)
+y_values = []
+for polynomial_model.state_dict()['linear.weight'][0] in x_values:
+    y_values.append( polynomial_model().item() )
+plt.plot(x_values.numpy(), y_values)
+# Find the global minimum & add noise for difficulty
+optimizer = torch.optim.SGD(polynomial_model.parameters(), lr=0.001, momentum=0.9) # momentum term
+polynomial_model.state_dict()['linear.weight'][0] = 6.0 # starting point
+optimized_x_values, optimized_y_values = [], []
+for n in range(100):
+    loss = polynomial_model()
+    x_value = polynomial_model.state_dict()['linear.weight'][0].detach().data.item()
+    y_value = loss.item()
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    optimized_x_values.append(x_value)
+    optimized_y_values.append(y_value)
+plt.scatter(optimized_x_values, optimized_y_values)
