@@ -202,8 +202,6 @@ plt.scatter(optimized_x_values, optimized_y_values)
 #       A) Normalize for the whole batch (re-center and re-scaled): Z = (neuron-mean)/standard_deviation
 #       B) Apply affine transformation: Y = Z*gamma_neuron +beta_neuron
 
-# Define the Neural Network Model using Batch Normalization
-
 class NetBatchNorm(nn.Module):
     def __init__(self, in_size, n_hidden):
         super().__init__()
