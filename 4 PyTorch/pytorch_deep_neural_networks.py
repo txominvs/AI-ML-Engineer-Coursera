@@ -159,6 +159,7 @@ torch.nn.init.kaiming_uniform_(linear.weight, nonlinearity="relu")
 # new weights = old weights - learning rate *  new velocity
 
 # Momentum helps avoid: saddle points, local minima and vanishing gradients
+optimizer = torch.optim.SGD(model.parameters(), lr=0.1, momentum=0.5) # momentum term
 
 ###
 # Example: FIND THE MINIMUM OF A POLYNOMIAL USING **PYTORCH**
