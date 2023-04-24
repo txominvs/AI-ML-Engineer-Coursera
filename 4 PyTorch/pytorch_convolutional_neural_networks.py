@@ -26,6 +26,17 @@ image = torch.zeros(
 )
 result = conv(image)
 
+# Convolution channels: matrix multiplication between kernels * input channels as rows
+biases = conv.state_dict()['biases']
+weights = conv.state_dict()['weight']
+outputs = []
+for out_channel in range(out_channels):
+    temp = 0
+    for in_channel in range(in_chanels):
+        temp += convolution(image[in_channel], weights[out_channel][in_channel])
+    temp += biases[out_channel]
+    outputs.append(temp)
+
 ###
 # MAX POOLING
 ###
