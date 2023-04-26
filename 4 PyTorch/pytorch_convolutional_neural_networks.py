@@ -141,3 +141,71 @@ for epoch in range(10):
 
 model.eval() # do not forget to freeze BATCH NORM layers in the end
 plt.imshow(model.state_dict()['cnn1.weight'][out_index, in_index, :,:], cmap='seismic')
+
+###
+# Running on a GPU
+###
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # Select GPU (cuda) or CPU
+
+tensor_on_GPU = torch.tensor([1, 2, 3, 4]).to(device) # Send a tensor to GPU
+
+model = Custom_CNN()
+model.to(device) # Convert model's layers to GPU tensors
+
+for epoch in range(100):
+    for features, labels in train_loader:
+        features, labels = features.to(device), labels.to(device) # Send data to GPU
+        optimizer.zero_grad()
+        predictions = model(features)
+        loss = criterion(predictions, labels)
+        loss.backwards()
+        optimizer.step()
+
+###
+# Pre-trained models with TORCH-VISION
+###
+# ResNet18 residual network with skip connections
+import torchvision.models as models
+model = models.resnet18(pretrained=True)
+for param in model.parameters():
+    param.requires_grad = False
+model.fc = nn.Linear(512, 7) # add fully connected layer with requires_grad=True by default
+
+from torchvision import transforms
+mean = [0.485, 0.456, 0.406]
+std  = [0.229, 0.224, 0.225]
+composed = transforms.Compose([
+    transforms.Resize(244),
+    transforms.ToTensor(),
+    transforms.Normalize(mean, std),
+])
+
+train_dataset = Custom_dataset(transform=composed, train=True)
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=15)
+validation_dataset = Custom_dataset(transform=composed)
+validation_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=20)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(
+    [param for param in model.parameters() if param.requires_grad],
+    lr = 0.003
+)
+
+for epoch in range(20):
+    for x, y in train_loader:
+        model.train() # Training mode
+        optimizer.zero_grad()
+        z = model(x)
+        loss = criterion(z, x)
+        loss.backward()
+        optimizer.step()
+
+        loss_per_iteration = loss.item()
+    
+    correct = 0
+    for x, y in validation_loader:
+        model.eval() # Freeze layers
+        z = model(x)
+        _, yhat = torch.max(z, 1)
+        correct += (yhat == y).sum().item()
+    accuracy_per_epoch = correct / len(validation_dataset)
