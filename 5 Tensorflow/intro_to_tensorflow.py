@@ -16,7 +16,7 @@ a = tf.constant([1, 2, 3, 4])
 b = tf.constant(np.array([5, 6, 7, 8]))
 c = tf.Variable([8, 9, 10, 11])
 d = tf.convert_to_tensor([123, 456,])
-to_numpy = a.numpy()
+back_to_numpy = a.numpy()
 
 operations = tf.matmul, tf.add, tf.subtract, tf.nn.sigmoid, ...
 dot_product = tf.tensordot(a, b, axes=1)
