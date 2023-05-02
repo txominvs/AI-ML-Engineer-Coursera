@@ -115,3 +115,9 @@ for epoch in range(700):
     pred = forward(test_X)
     validation_loss = loss_object(pred, test_Y)
     validation_accuracy = accuracy(pred, test_Y)
+
+# Convolutional NN: automatic feature extraction
+# Recurrent NN: sequential data, language translations
+# Restricted Boltzman Machine: unsupervised patterns
+# Deep Belief Networks: stack of RBMs, image classification
+# Autoencoder: unsupervised, feature compression
