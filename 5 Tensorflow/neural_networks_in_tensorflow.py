@@ -1,12 +1,13 @@
 import tensorflow as tf
 
-###
-# Simple neural network
-###
-
+# Load dataset
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0 # normalize
 y_train, y_test = tf.one_hot(y_train, 10), tf.one_hot(y_test, 10) # make labels one hot encoded
+
+###
+# Simple neural network
+###
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(50)
 test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(50)
