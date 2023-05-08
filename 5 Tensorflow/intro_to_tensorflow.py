@@ -14,7 +14,12 @@ assert tf.executing_eagerly() == True
 
 a = tf.constant([1, 2, 3, 4])
 b = tf.constant(np.array([5, 6, 7, 8]))
-c = tf.Variable([8, 9, 10, 11]) # can be changed using the .assign() .assign_add() .assign_sub() methods!
+c = tf.Variable([8, 9, 10, 11])
+# VARIABLES vs CONSTANT TENSORS:
+# 1) Variables can be changed using the .assign() .assign_add() .assign_sub() methods
+# 2) Variables are tracked by default by the GradientTape() since tf.Variable(trainable=True)
+#    whereas Constants must be manually tracked using GradientTape().watch(constant)
+# 3) tf.keras.Sequential([layers]) automatically collets all Variables in model.trainable_variables[]
 d = tf.convert_to_tensor([123, 456,])
 back_to_numpy = a.numpy()
 
@@ -22,7 +27,19 @@ operations = tf.matmul, tf.add, tf.subtract, tf.nn.sigmoid, ...
 dot_product = tf.tensordot(a, b, axes=1)
 addition_result = c + 1
 
-@tf.function
+# Derivatives
+x = tf.Variable(3.0)
+with tf.GradientTape() as g:
+    y = x * x
+(dy_dx,) = g.gradient(y, [x,])
+# or equivalently
+x = tf.constant(3.0)
+with tf.GradientTape() as g:
+    g.watch(x)
+    y = x * x
+(dy_dx,) = g.gradient(y, [x,])
+
+@tf.function # for a performance boost
 def add(first, second):
     c = tf.add(first, second)
     print(c)
