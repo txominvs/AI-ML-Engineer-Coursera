@@ -6,7 +6,6 @@
 
 import tensorflow as tf
 
-
 ###
 ### New method
 ###
@@ -45,6 +44,15 @@ def add(first, second):
     print(c)
     return c
 result_of_function = add(a, b)
+
+x = tf.constant(x)
+layer = tf.keras.layers.Softmax(); y = layer(x)
+# or equivalently
+y = tf.nn.softmax(x)
+
+train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(50).shuffle(buffer_size=100)
+for x, y in train_ds: # mini-batch = 50
+    ...
 
 ###
 ### Old method
