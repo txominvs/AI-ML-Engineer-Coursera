@@ -56,8 +56,8 @@ for epoch in range(1):
                 weights_matrix = weights_matrix + alpha_learning_rate * delta_weights_matrix
 
                 # update biases
-                visible_bias = visible_bias + alpha_learning_rate * (v0_state - v1_state)
-                hidden_bias = hidden_bias + alpha_learning_rate * (h0_state - h1_state) 
+                visible_bias = visible_bias + alpha_learning_rate * (v0_state - v1_state) # tf.reduce_mean(v0 - v1)??
+                hidden_bias = hidden_bias + alpha_learning_rate * (h0_state - h1_state) # tf.reduce_mean(v0 - v1)??
                 
                 # old state = new state
                 v0_state = v1_state
