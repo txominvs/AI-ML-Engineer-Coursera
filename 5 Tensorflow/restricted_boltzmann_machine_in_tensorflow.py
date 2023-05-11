@@ -1,12 +1,12 @@
 # Restricted Boltzmann Machines
     # Autoencoder, UNSUPERVISED unlabeled data
-    # STOCASTIC method: random() involved
+    # STOCASTIC method with random() involved, for a DETERMINISTIC approach see Autoencoders
     # Shallow NN with 2-layers: input and hidden
     # Input -> First layer -> Hidden layer with less neurons (dimensionality reduction) -> Reconstruct input
 # Advantages:
     # 1) Collaborative Filtering: guess missing values
     # 2) Automatic feature/pattern extraction
-    # 3) More efficient for dimensionality reduction that Principal Component Analysis
+    # 3) Better dimensionality reduction than PCA (Principal Component Analysis)r
 # An essential component for Deep Belief Networks
 # Steps:
     # Forwards pass: set hidden neuron to 1 with probability = sigmoid( WEIGHTS_MATRIX |input> + |bias_1> )
@@ -38,7 +38,7 @@ for epoch in range(1):
         for sample in batch_x:
             v0_state = sample
 
-            for repeat_optimization_for_each_sample in range(1):
+            for repeat_optimization_for_each_sample in range(1): # K-value
                 # hidden layer
                 h0_prob = tf.nn.sigmoid(tf.matmul([v0_state], weights_matrix) + hidden_bias) # probabilities of the hidden units
                 h0_state = tf.nn.relu(tf.sign(h0_prob - tf.random.uniform(tf.shape(h0_prob)))) # stochastic
@@ -56,9 +56,15 @@ for epoch in range(1):
                 weights_matrix = weights_matrix + alpha_learning_rate * delta_weights_matrix
 
                 # update biases
-                visible_bias = visible_bias + alpha_learning_rate * (v0_state - v1_state) # tf.reduce_mean(v0 - v1)??
-                hidden_bias = hidden_bias + alpha_learning_rate * (h0_state - h1_state) # tf.reduce_mean(v0 - v1)??
-                
+                visible_bias = visible_bias + alpha_learning_rate * (v0_state - v1_state) # tf.reduce_mean(v0-v1, axis=0)??
+                hidden_bias = hidden_bias + alpha_learning_rate * (h0_prob - h1_prob) #(h0_state - h1_state) # tf.reduce_mean(v0-v1, axis=0)??
+                # The mean value is typically used when performing batch
+                # training or mini-batch training in RBMs. In these scenarios,
+                # instead of updating the weights and biases based on
+                # individual training samples, the updates are computed based
+                # on the average gradients computed over a batch of training
+                # samples.
+
                 # old state = new state
                 v0_state = v1_state
 

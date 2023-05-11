@@ -53,6 +53,11 @@ y = tf.nn.softmax(x)
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(50).shuffle(buffer_size=100)
 for x, y in train_ds: # mini-batch = 50
     ...
+# or equivalently
+train_x = tf.data.Dataset.from_tensors(x_train).batch(50).shuffle(buffer_size=100)
+train_y = tf.data.Dataset.from_tensors(y_train).batch(50).shuffle(buffer_size=100)
+for x, y in zip(train_x, train_y): # mini-batch = 50
+    ...
 
 ###
 ### Old method
