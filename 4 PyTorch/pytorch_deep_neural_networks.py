@@ -53,7 +53,7 @@ for epoch in range(10):
         loss.backward()
         optimizer.step()
 
-        loss_per_epoch = loss.item()
+        loss_per_minibatch = loss.item()
 
     correct = 0
     for x, y in validation_loader:
@@ -228,7 +228,7 @@ for epoch in range(10):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        loss_per_epoch = loss.item()
+        loss_per_minibatch = loss.item()
         
     correct = 0
     for x, y in validation_loader:

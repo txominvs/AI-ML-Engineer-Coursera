@@ -209,3 +209,17 @@ for epoch in range(20):
         _, yhat = torch.max(z, 1)
         correct += (yhat == y).sum().item()
     accuracy_per_epoch = correct / len(validation_dataset)
+
+
+### PyTorch standard preprocessing https://pytorch.org/hub/pytorch_vision_resnet/
+from PIL import Image
+from torchvision import transforms
+input_image = Image.open(filename)
+preprocess = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(224),
+    transforms.ToTensor(), # crop data from [0 255] to [0. 1.]
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+input_tensor = preprocess(input_image)
+single_sample_minibatch = input_tensor.unsqueeze(0) # create a mini-batch as expected by the model
