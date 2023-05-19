@@ -108,21 +108,25 @@ for batch_images, batch_labels in image_generator:
 import keras
 data_generator = ImageDataGenerator(
     preprocessing_function=keras.applications.resnet50.preprocess_input,
+    # keras.applications.vgg16.preprocess_input
 )
 train_generator = data_generator.flow_from_directory(
     'concrete_data_week3/train',
     target_size=(224, 224),
     batch_size=100,
+    shuffle=False,
     class_mode='categorical',
 )
 validation_generator = data_generator.flow_from_directory(
     'concrete_data_week3/valid',
     target_size=(224, 224),
     batch_size=100,
+    shuffle=False,
     class_mode='categorical',
 )
 model = keras.models.Sequential([
     keras.applications.ResNet50(
+    # keras.applications.vgg16
         include_top=False,
         pooling='avg',
         weights='imagenet',
@@ -139,3 +143,12 @@ fit_history = model.fit_generator(
     verbose=1,
 )
 model.save('classifier_resnet_model.h5')
+
+scores = model.evaluate_generator(validation_generator)
+for metric, value in zip(model.metrics_names, scores):
+    print(metric, "=", value)
+
+predictions = model.predict_generator(validation_generator, verbose=1)
+predicted_class_indices = np.argmax(predictions, axis=1)
+index_to_label_map = {index: label for label, index in validation_generator.class_indices.items()}
+named_predictions = [index_to_label_map[index] for index in predicted_class_indices]

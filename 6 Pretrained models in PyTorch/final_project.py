@@ -1,9 +1,10 @@
 model = models.resnet18(pretrained=True)
-
 for param in model.parameters():
     param.requires_grad = False
-
 model.fc = nn.Linear(512, 7)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") # Select GPU (cuda) or CPU
+model.to(device)
 
 composed = transforms.Compose([
     transforms.Resize(224),
@@ -13,7 +14,6 @@ composed = transforms.Compose([
 
 train_dataset = Dataset(transform=composed, train=True)
 validation_dataset = Dataset(transform=composed, train=False)
-
 train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=15)
 validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=10)
 
@@ -26,6 +26,7 @@ optimizer = torch.optim.Adam(
 for epoch in range(20):
     epoch_loss = 0
     for x, y in train_loader:
+        x, y = x.to(device), y.to(device)
         model.train()
         optimizer.zero_grad()
         z = model(x)
@@ -37,6 +38,7 @@ for epoch in range(20):
 
     correct = 0
     for x, y in validation_loader:
+        x, y = x.to(device), y.to(device)
         model.eval()
         z = model(x)
         _, yhat = torch.max(z.data, 1)
