@@ -42,7 +42,9 @@ y_train = keras.utils.to_categorical(y_train) # one-hot encode outputs
 
 model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, verbose=2)
 
-loss_value, *metrics_values = model.evaluate(x_test, y_test, verbose=0)
+metrics_scores = model.evaluate(x_test, y_test, verbose=0) # loss = metrics_scores[0]
+for metric_name, metric_score in zip(model.metrics_names, metrics_scores):
+	print(metric_name, "=", metric_score)
 
 #########################
 # CONVOLUTIONAL NETWORK #
@@ -67,6 +69,8 @@ model.add(keras.layers.Dense(num_classes, activation='softmax'))
 
 model.compile(optimizer='adam', loss='categorical_crossentropy',  metrics=['accuracy'])
 
-model.fit(x_train, y_train, validation_data=(y_test, y_test), epochs=10, batch_size=200, verbose=2)
+model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=200, verbose=2)
 
-loss_value, *metrics_values = model.evaluate(x_test, y_test, verbose=0)
+metrics_scores = model.evaluate(x_test, y_test, verbose=0) # loss = metrics_scores[0]
+for metric_name, metric_score in zip(model.metrics_names, metrics_scores):
+	print(metric_name, "=", metric_score)
